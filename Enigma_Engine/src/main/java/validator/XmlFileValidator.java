@@ -1,9 +1,10 @@
 package validator;
 
 import bte.component.jaxb.*;
-import exception.fileexceoption.*;
+import exception.fileexception.*;
 
 import java.io.File;
+import java.math.BigInteger;
 import java.util.*;
 
 public class XmlFileValidator implements FileValidator {
@@ -11,14 +12,14 @@ public class XmlFileValidator implements FileValidator {
     public boolean isFileExists(String filePath) {
         File file = new File(filePath);
         if (!file.exists() || !file.isFile()) {
-            throw new exception.fileexceoption.FileDoesNotExistException(filePath);
+            throw new exception.fileexception.FileDoesNotExistException(filePath);
         }
         return true;
     }
 
     public boolean validateIsXmlFile(String filePath) {
         if (!filePath.toLowerCase().endsWith(".xml")) {
-            throw new exception.fileexceoption.NotXmlFileException(filePath);
+            throw new exception.fileexception.NotXmlFileException(filePath);
         }
         return true;
 
@@ -27,7 +28,7 @@ public class XmlFileValidator implements FileValidator {
     @Override
     public boolean isAbcSizeEven(String abc) {
         if (abc.length() % 2 != 0) {
-            throw new exception.fileexceoption.AbcSizeNotEvenException();
+            throw new exception.fileexception.AbcSizeNotEvenException();
         }
         return true;
     }
@@ -35,7 +36,7 @@ public class XmlFileValidator implements FileValidator {
     @Override
     public boolean hasAtLeastThreeRotors(List<BTERotor> rotors) {
         if (rotors.size() < 3) {
-            throw new exception.fileexceoption.NotEnoughRotorsException(rotors.size());
+            throw new exception.fileexception.NotEnoughRotorsException(rotors.size());
         }
         return true;
     }
@@ -44,24 +45,24 @@ public class XmlFileValidator implements FileValidator {
     public boolean hasValidRotorIds(List<BTERotor> rotors) {
 
         if (rotors == null || rotors.isEmpty()) {
-            throw new exception.fileexceoption.InvalidRotorIdsException();
+            throw new exception.fileexception.InvalidRotorIdsException();
         }
         Set<Integer> ids = new HashSet<>();
         int maxId = 0;
         for (BTERotor rotor : rotors) {
             int id = rotor.getId();
             if (id <= 0) {
-                throw new exception.fileexceoption.InvalidRotorIdsException();
+                throw new exception.fileexception.InvalidRotorIdsException();
             }
             if (!ids.add(id)) {
-                throw new exception.fileexceoption.InvalidRotorIdsException();
+                throw new exception.fileexception.InvalidRotorIdsException();
             }
 
             maxId = Math.max(maxId, id);
         }
 
         if (maxId != ids.size()) {
-            throw new exception.fileexceoption.InvalidRotorIdsException();
+            throw new exception.fileexception.InvalidRotorIdsException();
         }
         return true;
     }
@@ -78,14 +79,14 @@ public class XmlFileValidator implements FileValidator {
                 String left = p.getLeft();
                 for (int i = 0; i < left.length(); i++) {
                     if (!leftInputs.add(left.charAt(i))) {
-                        throw new exception.fileexceoption.DuplicateRotorMappingException(rotor.getId());
+                        throw new exception.fileexception.DuplicateRotorMappingException(rotor.getId());
                     }
                 }
 
                 String right = p.getRight();
                 for (int i = 0; i < right.length(); i++) {
                     if (!rightInputs.add(right.charAt(i))) {
-                        throw new exception.fileexceoption.DuplicateRotorMappingException(rotor.getId());
+                        throw new exception.fileexception.DuplicateRotorMappingException(rotor.getId());
                     }
                 }
             }
@@ -100,7 +101,7 @@ public class XmlFileValidator implements FileValidator {
         for (BTERotor rotor : rotors) {
             int notchPosition = rotor.getNotch();
             if (notchPosition < 0 || notchPosition > abc.length()) {
-                throw new exception.fileexceoption.NotchOutOfRangeException(rotor.getId());
+                throw new exception.fileexception.NotchOutOfRangeException(rotor.getId());
             }
         }
 
@@ -111,7 +112,7 @@ public class XmlFileValidator implements FileValidator {
     public boolean hasValidReflectorIds(List<BTEReflector> reflectors) {
 
         if (reflectors == null || reflectors.isEmpty()) {
-            throw new exception.fileexceoption.InvalidReflectorIdException("NULL/EMPTY");
+            throw new exception.fileexception.InvalidReflectorIdException("NULL/EMPTY");
         }
 
         Set<Integer> ids = new HashSet<>();
@@ -121,18 +122,18 @@ public class XmlFileValidator implements FileValidator {
             int id = romanToInt(reflector.getId());
 
             if (id <= 0) {
-                throw new exception.fileexceoption.InvalidReflectorIdException(reflector.getId());
+                throw new exception.fileexception.InvalidReflectorIdException(reflector.getId());
             }
 
             if (!ids.add(id)) {
-                throw new exception.fileexceoption.InvalidReflectorIdException(reflector.getId());
+                throw new exception.fileexception.InvalidReflectorIdException(reflector.getId());
             }
 
             maxId = Math.max(maxId, id);
         }
 
         if (maxId != ids.size()) {
-            throw new exception.fileexceoption.InvalidReflectorIdException("Non-sequential IDs");
+            throw new exception.fileexception.InvalidReflectorIdException("Non-sequential IDs");
         }
 
         return true;
@@ -144,7 +145,7 @@ public class XmlFileValidator implements FileValidator {
         for (BTEReflector refl : reflectors) {
             for (BTEReflect mapping : refl.getBTEReflect()) {
                 if (mapping.getInput() == mapping.getOutput()) {
-                    throw new exception.fileexceoption.ReflectorSelfMappingException(
+                    throw new exception.fileexception.ReflectorSelfMappingException(
                             String.valueOf(mapping.getInput()),
                             refl.getId()
                     );
@@ -176,6 +177,13 @@ public class XmlFileValidator implements FileValidator {
         }
     }
 
+    private void validateNumberOfActiveRotors(BigInteger activeRotorsCount, int totalRotorsCount ) {
+        if (activeRotorsCount.compareTo(BigInteger.valueOf(totalRotorsCount)) > 0) {
+            throw new RotorCountOutOfRangeException(activeRotorsCount.toString() + " active rotors for " + totalRotorsCount + " available rotors.");
+        }
+    }
+
+
     public void ValidateAll(BTEEnigma bteEnigma) {
         isAbcSizeEven(bteEnigma.getABC());
         hasAtLeastThreeRotors(bteEnigma.getBTERotors().getBTERotor());
@@ -184,6 +192,7 @@ public class XmlFileValidator implements FileValidator {
         isNotchPositionInRange(bteEnigma.getBTERotors().getBTERotor(), bteEnigma.getABC());
         hasValidReflectorIds(bteEnigma.getBTEReflectors().getBTEReflector());
         hasNoSelfMappingInReflector(bteEnigma.getBTEReflectors().getBTEReflector());
+        validateNumberOfActiveRotors(bteEnigma.getRotorsCount(), bteEnigma.getBTERotors().getBTERotor().size());
     }
 
     public void ValidateFilePath(String filePath) {

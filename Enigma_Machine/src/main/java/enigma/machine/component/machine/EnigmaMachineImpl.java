@@ -32,14 +32,16 @@ public class EnigmaMachineImpl implements EnigmaMachine, Serializable {
 
     @Override
     public char processLatter(char latter) {
-        int intermediate = keyboard.processCharacter(latter);
+        char latterAfterPlugboard = setting.getPlugboard().plugboardSwap(latter);
+        int intermediate = keyboard.processCharacter(latterAfterPlugboard);
         List<Setting.RotorPosition> rotors = setting.getActiveRotors();
 
         rotorsStep(rotors);
         intermediate = moveForward(rotors, intermediate);
         intermediate = setting.getReflector().reflect(intermediate + 1) - 1;
         intermediate = moveBackward(rotors, intermediate);
-        return keyboard.lightALamp(intermediate);
+        char latterBeforePlugboard = keyboard.lightALamp(intermediate);
+        return setting.getPlugboard().plugboardSwap(latterBeforePlugboard);
     }
 
     private static int moveBackward(List<Setting.RotorPosition> rotors, int intermediate) {

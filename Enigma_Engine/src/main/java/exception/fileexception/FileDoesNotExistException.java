@@ -1,4 +1,4 @@
-package exception.fileexceoption;
+package exception.fileexception;
 
 public class FileDoesNotExistException extends FileValidationException {
     public FileDoesNotExistException(String filePath) {

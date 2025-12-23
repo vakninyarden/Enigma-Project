@@ -46,7 +46,7 @@
 
                 <configuration>
                     <sources>
-                        <source>${project.basedir}/src/main/resources/Enigma-Ex1.xsd</source>
+                        <source>${project.basedir}/src/main/resources/Enigma-Ex2.xsd</source>
                     </sources>
 
                     <!-- כאן אתה קובע את ה-package שהמערכת "תפתח" -->

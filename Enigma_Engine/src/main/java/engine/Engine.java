@@ -12,7 +12,7 @@ public interface Engine {
 
     String processMessage(String message);
 
-    public void codeManual(String line, String initialRotorsPositions, int reflectorId);
+    public void codeManual(String line, String initialRotorsPositions, int reflectorId, String plugboardInput);
 
     String codeAuto();
 
@@ -23,4 +23,6 @@ public interface Engine {
     void saveMachineStateToFile(String path) throws IOException;
 
     void loadMachineStateFromFile(String path) throws IOException;
+
+    public int getNumberOfRotors();
 }

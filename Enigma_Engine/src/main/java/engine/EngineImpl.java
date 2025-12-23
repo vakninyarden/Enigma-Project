@@ -7,6 +7,8 @@ import engine.statistic.StatisticsManager;
 import enigma.machine.component.keyboard.KeyBoard;
 import enigma.machine.component.keyboard.KeyBoardImpl;
 import enigma.machine.component.machine.EnigmaMachineImpl;
+import enigma.machine.component.plugboard.PlugBoard;
+import enigma.machine.component.plugboard.PlugBoardImpl;
 import enigma.machine.component.reflector.Reflector;
 import enigma.machine.component.rotor.Rotor;
 import enigma.machine.component.setting.Setting;
@@ -17,11 +19,12 @@ import validator.XmlFileValidator;
 import enigma.machine.component.machine.EnigmaMachine;
 
 import java.io.*;
+import java.math.BigInteger;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class EngineImpl implements Engine {
-    private final int NUMBER_OF_ROTORS = 3;
+    private int NUMBER_OF_ROTORS;
     private EnigmaMachine machine;
     private StatisticsManager statisticsManager;
     private Repository repository;
@@ -37,6 +40,7 @@ public class EngineImpl implements Engine {
         validator.ValidateFilePath(path);
         BTEEnigma bteMachine = LoadManager.loadXmlToObject(path);
         validator.ValidateAll(bteMachine);
+        NUMBER_OF_ROTORS = bteMachine.getRotorsCount().intValue();
         repository = new Repository(bteMachine.getABC(), bteMachine);
         messageCount = 0;
         statisticsManager.resetStatistics();
@@ -45,7 +49,7 @@ public class EngineImpl implements Engine {
     @Override
     public DtoMachineSpecification showMachineDetails(boolean isCodeSet) {
 
-        if(!isCodeSet) {
+        if (!isCodeSet) {
             DtoMachineSpecification dtoMachineSpecification = new DtoMachineSpecification(repository.getRotorCount(),
                     repository.getReflectorCount(),
                     messageCount,
@@ -160,16 +164,18 @@ public class EngineImpl implements Engine {
     }
 
     @Override
-    public void codeManual(String line, String initialRotorsPositions, int reflectorId) {
+    public void codeManual(String line, String initialRotorsPositions, int reflectorId, String plugboardInput) {
         InputValidator inputValidator = new InputValidator();
-        inputValidator.validateRotorIds(line);
+        inputValidator.validateRotorIds(line, NUMBER_OF_ROTORS);
         List<Integer> rotorIds = Arrays.stream(line.split(","))
                 .map(String::trim)
                 .map(Integer::parseInt)
                 .collect(Collectors.toList());
-        inputValidator.validateAllManualCode(rotorIds, repository.getRotorCount(), initialRotorsPositions, repository.getAbc(), reflectorId);
+        inputValidator.validateAllManualCode(rotorIds, repository.getRotorCount(), initialRotorsPositions, repository.getAbc(), reflectorId, plugboardInput);
         String reflectorIdStr = intToRoman(reflectorId);
-        setMachineSetting(rotorIds, initialRotorsPositions, reflectorIdStr);
+
+        Map<Character, Character> plugboardMap = buildPlugboardMap(plugboardInput);
+        setMachineSetting(rotorIds, initialRotorsPositions, reflectorIdStr, plugboardMap);
 
         createCodeForStatistic();
 
@@ -183,7 +189,7 @@ public class EngineImpl implements Engine {
         statisticsManager.setCurrentCode(originalCode.toString());
     }
 
-    private void setMachineSetting(List<Integer> rotorIds, String initialRotorsPositions, String reflectorId) {
+    private void setMachineSetting(List<Integer> rotorIds, String initialRotorsPositions, String reflectorId, Map<Character, Character> plugboardMap) {
         List<Setting.RotorPosition> activeRotors = new ArrayList<>();
         int size = rotorIds.size();
         for (int i = size - 1; i >= 0; i--) {
@@ -192,12 +198,16 @@ public class EngineImpl implements Engine {
             Setting.RotorPosition rotorPosition = new Setting.RotorPosition(rotor, position);
             activeRotors.add(rotorPosition);
         }
+
         Reflector reflector = repository.getReflecton(reflectorId);
-        Setting setting = new SettingImpl(reflector, activeRotors);
+        PlugBoard plugBoard = new PlugBoardImpl(plugboardMap);
+        Setting setting = new SettingImpl(reflector, activeRotors, plugBoard);
         KeyBoard keyBoard = new KeyBoardImpl(repository.getAbc());
         machine = new EnigmaMachineImpl(keyBoard, setting);
     }
 
+
+    /// //// to do plug boardddd
     @Override
     public String codeAuto() {
         Random rand = new Random();
@@ -212,7 +222,7 @@ public class EngineImpl implements Engine {
         }
         int ReflectorId = rand.nextInt((numberOfReflectors)) + 1;
         String id = intToRoman(ReflectorId);
-        setMachineSetting(rotorIds, initialRotorsPositions, id);
+      //  setMachineSetting(rotorIds, initialRotorsPositions, id);
 
         StringBuilder originalCode = new StringBuilder();
         BuildOrinigalCodeString(machine.getSetting(), originalCode);
@@ -280,4 +290,29 @@ public class EngineImpl implements Engine {
             e.printStackTrace();
         }
     }
+
+
+    public  Map<Character, Character> buildPlugboardMap(String input) {
+        Map<Character, Character> plugboard = new HashMap<>();
+
+        if (input == null || input.isEmpty()) {
+            return plugboard;
+        }
+
+        for (int i = 0; i < input.length(); i += 2) {
+            char a = input.charAt(i);
+            char b = input.charAt(i + 1);
+
+            plugboard.put(a, b);
+            plugboard.put(b, a);
+        }
+
+        return plugboard;
+
+    }
+    public int getNumberOfRotors() {
+        return NUMBER_OF_ROTORS;
+    }
+
+
 }

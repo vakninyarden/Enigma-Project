@@ -27,7 +27,7 @@ public class InputValidator {
         if (reflectorId <= 0 || reflectorId > 5) throw new InvalidReflectorSelectionException("" + reflectorId);
     }
 
-    public void validateRotorIds(String input) {
+    public void validateRotorIds(String input, int expectedCountOfRotors) {
 
         if (input == null || input.trim().isEmpty()) {
             throw new TooFewRotorsSelectedException("0");
@@ -49,8 +49,8 @@ public class InputValidator {
             }
         }
 
-        if (parts.length != 3) {
-            if (parts.length > 3) throw new TooManyRotorsSelectedException("you selected" + parts.length + " rotors");
+        if (parts.length != expectedCountOfRotors) {
+            if (parts.length > expectedCountOfRotors) throw new TooManyRotorsSelectedException("you selected" + parts.length + " rotors");
             else throw new TooFewRotorsSelectedException("you selected" + parts.length + " rotors");
         }
 
@@ -75,11 +75,44 @@ public class InputValidator {
         }
     }
 
-    public void validateAllManualCode(List<Integer> rotorIds, int sizeOfRotors, String positionsInput, String abc, int reflectorId) {
+    public void validateAllManualCode(List<Integer> rotorIds, int sizeOfRotors, String positionsInput, String abc, int reflectorId, String plugboardInput) {
         validateRotorExistence(rotorIds, sizeOfRotors);
         validateDuplicateRotorIds(rotorIds);
         validatePositionsLength(positionsInput, rotorIds.size(), abc);
         validateReflectorSelecttion(reflectorId);
+
+        validateMessageInput(plugboardInput, abc);
+        validatePlugboardString(plugboardInput);
+    }
+
+    private void validatePlugboardString(String input) {
+        if (input == null || input.isEmpty()) {
+            return;
+        }
+
+        if (input.length() % 2 != 0) {
+            throw new InvalidLengthInputException("Plugboard string length must be even");
+        }
+
+        java.util.Set<Character> usedChars = new java.util.HashSet<>();
+
+        for (int i = 0; i < input.length(); i += 2) {
+            char a = input.charAt(i);
+            char b = input.charAt(i + 1);
+
+            if (a == b) {
+                throw new SelfMappingException(
+                        "Illegal pair: '" + a + "' cannot map to itself");
+            }
+
+            if (usedChars.contains(a) || usedChars.contains(b)) {
+                throw new DuplicateMapException(
+                        "Letter '" + a + "' or '" + b + "' used more than once");
+            }
+
+            usedChars.add(a);
+            usedChars.add(b);
+        }
     }
 
 

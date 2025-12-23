@@ -3,7 +3,7 @@ import dto.DtoMachineSpecification;
 import dto.DtoStatistic;
 import engine.Engine;
 import dto.ProcessRecord;
-import exception.fileexceoption.FileValidationException;
+import exception.fileexception.FileValidationException;
 import exception.inputexception.InputValidationException;
 import exception.inputexception.InvalidEnigmaCharacterException;
 
@@ -135,7 +135,7 @@ public class ConsoleUI {
     }
 
     private void handleManualCodeSelection() {
-        System.out.println("Please enter the ids of the rotor you want to use (3 rotors):");
+        System.out.println("Please enter the ids of the rotor you want to use " + engine.getNumberOfRotors() + " rotors expected");
         Scanner scanner = new Scanner(System.in);
         String line = scanner.nextLine();
 
@@ -145,15 +145,20 @@ public class ConsoleUI {
         System.out.println("1 = I, 2 = II, 3 = III, 4 = IV, 5 = V");
 
         int reflectorId;
-        try {
+/*        try {*/
             reflectorId = scanner.nextInt();
-        } catch (InputMismatchException e) {
+            scanner.nextLine(); // Consume the newline character
+      /*  } catch (InputMismatchException e) {
             scanner.nextLine();
             System.out.println("Invalid choice, the reflector id must be a number between 1-5.");
             return;
-        }
+        }*/
+
+        System.out.println("Please enter the plugboard settings (e.g. ABCDEF), or leave empty for no plugboard:");
+        String plugboardLine = scanner.nextLine();
+
         try {
-            engine.codeManual(line, positionsLine, reflectorId);
+            engine.codeManual(line, positionsLine, reflectorId, plugboardLine);
         } catch (InputValidationException e) {
             System.out.println("An error occurred while setting the manual code: " + e.getMessage());
             return;
@@ -177,7 +182,7 @@ public class ConsoleUI {
         input = input.toUpperCase();
         try {
             String output = engine.processMessage(input);
-            System.out.println(output);
+            System.out.println(output.toUpperCase());
         } catch (InvalidEnigmaCharacterException e) {
             System.out.println("An error occurred while processing the message: " + e.getMessage());
             return;

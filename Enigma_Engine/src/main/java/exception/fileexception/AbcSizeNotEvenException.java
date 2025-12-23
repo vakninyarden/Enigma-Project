@@ -1,4 +1,4 @@
-package exception.fileexceoption;
+package exception.fileexception;
 
 public class AbcSizeNotEvenException extends FileValidationException {
     public AbcSizeNotEvenException() {
