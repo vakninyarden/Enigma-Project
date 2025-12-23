@@ -4,9 +4,17 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.example</groupId>
+    <groupId>patmal.course.enigma</groupId>
     <artifactId>EnigmaProject</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <modules>
+        <module>Enigma_Console_UI</module>
+        <module>Enigma_DTO</module>
+        <module>Enigma_Engine</module>
+        <module>Enigma_Machine</module>
+        <module>Loader</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
