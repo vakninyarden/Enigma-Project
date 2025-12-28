@@ -15,8 +15,8 @@ public class Repository implements Serializable {
     private final String abc;
 
     public Repository(String abc, BTEEnigma bteEnigma) {
-        this.abc = abc;
-        this.rotors = buildRotorsRepository(bteEnigma.getBTERotors(), abc);
+        this.abc = abc.toUpperCase();
+        this.rotors = buildRotorsRepository(bteEnigma.getBTERotors(), this.abc);
         this.reflectors = buildReflectorsRepository(bteEnigma.getBTEReflectors());
     }
 
@@ -52,8 +52,8 @@ public class Repository implements Serializable {
         List<Character> leftMapping = new ArrayList<>(size);
 
         for (BTEPositioning pos : bteRotor.getBTEPositioning()) {
-            String leftStr = pos.getLeft();
-            String rightStr = pos.getRight();
+            String leftStr = pos.getLeft().toUpperCase();
+            String rightStr = pos.getRight().toUpperCase();
 
             char leftChar = leftStr.charAt(0);
             char rightChar = rightStr.charAt(0);

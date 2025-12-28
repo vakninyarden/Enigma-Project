@@ -178,10 +178,17 @@ public class XmlFileValidator implements FileValidator {
     }
 
     private void validateNumberOfActiveRotors(BigInteger activeRotorsCount, int totalRotorsCount ) {
+        if(activeRotorsCount.compareTo(BigInteger.valueOf(99)) > 0) {
+            throw new RotorCountOutOfRangeException(activeRotorsCount.toString() + " active rotors is more than the max of 99.");
+        }
+
         if (activeRotorsCount.compareTo(BigInteger.valueOf(totalRotorsCount)) > 0) {
             throw new RotorCountOutOfRangeException(activeRotorsCount.toString() + " active rotors for " + totalRotorsCount + " available rotors.");
         }
+
     }
+
+
 
 
     public void ValidateAll(BTEEnigma bteEnigma) {

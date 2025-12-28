@@ -66,6 +66,7 @@ public class EngineImpl implements Engine {
         BuildCurrentCodeString(code, currentSbString);
 
 
+
         DtoMachineSpecification dtoMachineSpecification = new DtoMachineSpecification(repository.getRotorCount(),
                 repository.getReflectorCount(),
                 messageCount,
@@ -78,6 +79,8 @@ public class EngineImpl implements Engine {
         BuildRotorsIdString(machineOrinialCode, currentSbString);
         BuildCurrentCode(currentSbString, machineOrinialCode);
         BuildReflectorIdSring(currentSbString, machineOrinialCode);
+        BuildPlugBoardString(machineOrinialCode, currentSbString);
+
     }
 
     private void BuildCurrentCode(StringBuilder currentSbString, Setting machineOrinialCode) {
@@ -99,10 +102,12 @@ public class EngineImpl implements Engine {
         currentSbString.append('>');
     }
 
-    private void BuildOrinigalCodeString(Setting machineOrinialCode, StringBuilder sb) {
-        BuildRotorsIdString(machineOrinialCode, sb);
-        BuildOrignialCode(machineOrinialCode, sb);
-        BuildReflectorIdSring(sb, machineOrinialCode);
+    private void BuildOrinigalCodeString(Setting machineOrinialCode, StringBuilder originalSbCode) {
+        BuildRotorsIdString(machineOrinialCode, originalSbCode);
+        BuildOrignialCode(machineOrinialCode, originalSbCode);
+        BuildReflectorIdSring(originalSbCode, machineOrinialCode);
+        BuildPlugBoardString(machineOrinialCode, originalSbCode);
+
     }
 
     private static void BuildReflectorIdSring(StringBuilder sb, Setting machineOrinialCode) {
@@ -140,6 +145,7 @@ public class EngineImpl implements Engine {
 
     }
 
+
     @Override
     public String processMessage(String message) {
 
@@ -165,6 +171,7 @@ public class EngineImpl implements Engine {
 
     @Override
     public void codeManual(String line, String initialRotorsPositions, int reflectorId, String plugboardInput) {
+
         InputValidator inputValidator = new InputValidator();
         inputValidator.validateRotorIds(line, NUMBER_OF_ROTORS);
         List<Integer> rotorIds = Arrays.stream(line.split(","))
@@ -207,7 +214,6 @@ public class EngineImpl implements Engine {
     }
 
 
-    /// //// to do plug boardddd
     @Override
     public String codeAuto() {
         Random rand = new Random();
@@ -222,10 +228,13 @@ public class EngineImpl implements Engine {
         }
         int ReflectorId = rand.nextInt((numberOfReflectors)) + 1;
         String id = intToRoman(ReflectorId);
-      //  setMachineSetting(rotorIds, initialRotorsPositions, id);
+
+        Map<Character, Character> plugboardMap = BuildAutoPlugBoard();
+        setMachineSetting(rotorIds, initialRotorsPositions, id, plugboardMap);
 
         StringBuilder originalCode = new StringBuilder();
         BuildOrinigalCodeString(machine.getSetting(), originalCode);
+
         createCodeForStatistic();
         return originalCode.toString();
     }
@@ -310,9 +319,51 @@ public class EngineImpl implements Engine {
         return plugboard;
 
     }
+
     public int getNumberOfRotors() {
         return NUMBER_OF_ROTORS;
     }
 
+   Map<Character, Character> BuildAutoPlugBoard() {
+        Map<Character, Character> plugboardMap = new HashMap<>();
+        Random rand = new Random();
+        int numberOfPairs = rand.nextInt((repository.getAbc().length() / 2) + 1);
+        Set<Character> usedChars = new HashSet<>();
+
+        while (plugboardMap.size() / 2 < numberOfPairs) {
+            char char1 = repository.getAbc().charAt(rand.nextInt(repository.getAbc().length()));
+            char char2 = repository.getAbc().charAt(rand.nextInt(repository.getAbc().length()));
+
+            if (char1 != char2 && !usedChars.contains(char1) && !usedChars.contains(char2)) {
+                plugboardMap.put(char1, char2);
+                plugboardMap.put(char2, char1);
+                usedChars.add(char1);
+                usedChars.add(char2);
+            }
+        }
+        return plugboardMap;
+    }
+
+    private void BuildPlugBoardString(Setting machineOrinialCode, StringBuilder stringBuilder) {
+        if (machineOrinialCode.getPlugboard().getPlugboardMap().isEmpty()) {
+            return;
+        }
+        Set<Character> SeemCharsInPlugBoard = new HashSet<>();
+        stringBuilder.append('<');
+        Map<Character, Character> plugboardMap = new HashMap<>();
+        for (Map.Entry<Character, Character> entry : machineOrinialCode.getPlugboard().getPlugboardMap().entrySet()) {
+            char key = entry.getKey();
+            char value = entry.getValue();
+            if(!SeemCharsInPlugBoard.contains(key)){
+                SeemCharsInPlugBoard.add(value);
+                stringBuilder.append(key);
+                stringBuilder.append("|");
+                stringBuilder.append(value);
+                stringBuilder.append(",");
+            }
+        }
+        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+        stringBuilder.append('>');
+    }
 
 }

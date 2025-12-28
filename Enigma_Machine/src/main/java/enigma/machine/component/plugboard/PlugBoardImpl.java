@@ -17,4 +17,9 @@ public class PlugBoardImpl implements PlugBoard {
         }
         return latter;
     }
+
+    public Map<Character, Character> getPlugboardMap() {
+        return plugboardMapping;
+    }
+
 }

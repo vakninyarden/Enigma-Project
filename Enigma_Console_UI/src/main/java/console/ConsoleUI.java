@@ -158,7 +158,7 @@ public class ConsoleUI {
         String plugboardLine = scanner.nextLine();
 
         try {
-            engine.codeManual(line, positionsLine, reflectorId, plugboardLine);
+            engine.codeManual(line, positionsLine.toUpperCase(), reflectorId, plugboardLine.toUpperCase());
         } catch (InputValidationException e) {
             System.out.println("An error occurred while setting the manual code: " + e.getMessage());
             return;
