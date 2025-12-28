@@ -7,7 +7,7 @@ public class DtoMachineSpecification {
     String currentCode;
     String originalCode;
 
-    public DtoMachineSpecification(int numOfRotors, int numOfReflectors, int numOfMessages, String currentCode, String originalCode) {
+    public DtoMachineSpecification(int numOfRotors, int numOfReflectors, int numOfMessages, String originalCode,String currentCode) {
         this.numOfRotors = numOfRotors;
         this.numOfReflectors = numOfReflectors;
         this.numOfMessages = numOfMessages;
