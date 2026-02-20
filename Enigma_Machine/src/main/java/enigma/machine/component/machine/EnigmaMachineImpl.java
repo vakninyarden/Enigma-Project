@@ -4,9 +4,7 @@ import enigma.machine.component.keyboard.KeyBoard;
 import enigma.machine.component.rotor.Direction;
 import enigma.machine.component.setting.Setting;
 import enigma.machine.component.rotor.Rotor;
-
 import java.io.Serializable;
-import java.sql.SQLOutput;
 import java.util.List;
 
 

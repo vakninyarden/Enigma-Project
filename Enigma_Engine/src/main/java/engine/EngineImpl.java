@@ -13,16 +13,18 @@ import enigma.machine.component.reflector.Reflector;
 import enigma.machine.component.rotor.Rotor;
 import enigma.machine.component.setting.Setting;
 import enigma.machine.component.setting.SettingImpl;
+import org.springframework.stereotype.Service;
 import repository.Repository;
 import validator.InputValidator;
 import validator.XmlFileValidator;
 import enigma.machine.component.machine.EnigmaMachine;
 
+
 import java.io.*;
-import java.math.BigInteger;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Service
 public class EngineImpl implements Engine {
     private int NUMBER_OF_ROTORS;
     private EnigmaMachine machine;
@@ -185,8 +187,6 @@ public class EngineImpl implements Engine {
         setMachineSetting(rotorIds, initialRotorsPositions, reflectorIdStr, plugboardMap);
 
         createCodeForStatistic();
-
-
     }
 
     private void createCodeForStatistic() {
