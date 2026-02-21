@@ -1,3 +1,4 @@
+/*
 package controller.loader;
 import dto.response.loader.EnigmaMachineWeb;
 import org.springframework.stereotype.Component;
@@ -19,3 +20,4 @@ public class EnigmaMachineToWebConverter {
                 .build();
     }
 }
+*/

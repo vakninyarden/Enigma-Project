@@ -1,15 +1,20 @@
+
 package controller.loader;
 
+import controller.loader.converter.LoaderResponseToDtoMapper;
 import engine.Engine;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.multipart.MultipartFile;
 import dto.response.loader.EnigmaMachineWeb;
+import patmal.course.enigma.api.model.LoadMachineFromXml200Response;
+
 import java.io.InputStream;
 
-
+/*
 @RestController
 @RequestMapping("/enigma") //the url for the controller
 public class LoaderController {
@@ -52,5 +57,28 @@ public class LoaderController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         }
 
+    }
+}*/
+
+
+
+
+@RestController
+@RequestMapping("/load")
+@RequiredArgsConstructor
+public class LoaderController {
+
+    private final Engine engine;
+    private final LoaderResponseToDtoMapper responseMapper;
+
+    @PostMapping
+    public ResponseEntity<LoadMachineFromXml200Response> load(
+            @RequestBody LoadMachineFromXmlRequest request) {
+        // צריך לממש עם הטעינת XML שהוספנו במכונה
+
+        String xml = requestMapper.extractXml(request);
+        engine.loadMachine(xml);
+
+        return ResponseEntity.ok(responseMapper.success());
     }
 }
