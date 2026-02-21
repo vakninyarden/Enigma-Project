@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.multipart.MultipartFile;
 import dto.response.EnigmaMachineWeb;
 import java.io.InputStream;
-import java.util.Map;
 
 
 @RestController
@@ -47,6 +46,7 @@ public class LoaderController {
             return ResponseEntity.ok(successResponse);
 
         } catch (Exception e) {
+            e.printStackTrace();
             String errorMessage = "Failed to load Enigma machine: " + e.getMessage();
             EnigmaMachineWeb errorResponse = enigmaMachineToWebConverter.createFailedResponse(errorMessage);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);

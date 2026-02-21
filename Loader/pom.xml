@@ -17,7 +17,13 @@
         <dependency>
             <groupId>jakarta.xml.bind</groupId>
             <artifactId>jakarta.xml.bind-api</artifactId>
-            <version>4.0.2</version>
+            <version>4.0.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <version>4.0.5</version>
+            <scope>runtime</scope>
         </dependency>
 
 
@@ -42,9 +48,8 @@
 
                 <configuration>
                     <sources>
-                        <source>${project.basedir}/src/main/resources/Enigma-Ex2.xsd</source>
+                        <source>${project.basedir}/src/main/resources/Enigma-Ex3.xsd</source>
                     </sources>
-
                     <!-- כאן אתה קובע את ה-package שהמערכת "תפתח" -->
                     <packageName>bte.component.jaxb</packageName>
 
