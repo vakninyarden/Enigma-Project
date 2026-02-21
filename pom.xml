@@ -22,7 +22,6 @@
         <module>Loader</module>
         <module>Enigma_App</module>
         <module>Enigma_API</module>
-        <module>Enigma_Dal</module>
         <module>Enigma_DAL</module>
     </modules>
 

@@ -8,7 +8,6 @@
         <groupId>patmal.course.enigma</groupId>
         <artifactId>enigma-aggregator</artifactId>
         <version>1.0-SNAPSHOT</version>
-        <relativePath>pom.xml</relativePath>
     </parent>
 
     <artifactId>Enigma_App</artifactId>

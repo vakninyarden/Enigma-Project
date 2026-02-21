@@ -2,17 +2,20 @@ package engine;
 
 import dto.DtoMachineSpecification;
 import dto.DtoStatistic;
+import java.io.InputStream;
 
 import java.io.IOException;
 
 public interface Engine {
     void loadXml(String path);
 
+    void loadXml(InputStream inputStream); //To support loading from resources
+
     DtoMachineSpecification showMachineDetails(boolean isCodeSet);
 
     String processMessage(String message);
 
-    public void codeManual(String line, String initialRotorsPositions, int reflectorId, String plugboardInput);
+    void codeManual(String line, String initialRotorsPositions, int reflectorId, String plugboardInput);
 
     String codeAuto();
 
@@ -24,5 +27,5 @@ public interface Engine {
 
     void loadMachineStateFromFile(String path) throws IOException;
 
-    public int getNumberOfRotors();
+    int getNumberOfRotors();
 }

@@ -2,11 +2,15 @@ package validator;
 
 import bte.component.jaxb.*;
 import exception.fileexception.*;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.math.BigInteger;
 import java.util.*;
 
+
+// need to be component to be able to autowire to the engine imple instead of creating new instance of it in the engine impl
+@Component
 public class XmlFileValidator implements FileValidator {
 
     public boolean isFileExists(String filePath) {

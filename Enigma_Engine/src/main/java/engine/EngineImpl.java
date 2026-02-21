@@ -13,11 +13,15 @@ import enigma.machine.component.reflector.Reflector;
 import enigma.machine.component.rotor.Rotor;
 import enigma.machine.component.setting.Setting;
 import enigma.machine.component.setting.SettingImpl;
-import org.springframework.stereotype.Service;
 import repository.Repository;
 import validator.InputValidator;
 import validator.XmlFileValidator;
 import enigma.machine.component.machine.EnigmaMachine;
+
+// Spring annotations and imports for dependency injection and service declaration
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 
 
 import java.io.*;
@@ -26,25 +30,72 @@ import java.util.stream.Collectors;
 
 @Service
 public class EngineImpl implements Engine {
+    private final XmlFileValidator xmlValidator;
+    private final InputValidator inputValidator;
+    private final LoadManager loadManager;
+
+
     private int NUMBER_OF_ROTORS;
+    // private static int messageCount = 0;
+
+    // remove static beacuse we gonna have multiple instances of the engine and we want each instance to have its own message count
+    // note that EngineImpl is singleton so his one and only instance will hold the count correct
+     private  int messageCount = 0;
+
+
     private EnigmaMachine machine;
     private StatisticsManager statisticsManager;
     private Repository repository;
-    private static int messageCount = 0;
 
-    public EngineImpl() {
+   /* public EngineImpl() {
         statisticsManager = new StatisticsManager();
+    }*/
+
+    @Autowired
+    public EngineImpl(XmlFileValidator xmlValidator, InputValidator inputValidator, LoadManager loadManager) {
+        this.xmlValidator = xmlValidator;
+        this.inputValidator = inputValidator;
+        this.loadManager = loadManager;
+        this.statisticsManager = new StatisticsManager();
     }
 
     @Override
     public void loadXml(String path) {
-        XmlFileValidator validator = new XmlFileValidator();
-        validator.ValidateFilePath(path);
-        BTEEnigma bteMachine = LoadManager.loadXmlToObject(path);
-        validator.ValidateAll(bteMachine);
+        //Autowired
+        xmlValidator.validateIsXmlFile(path);
+
+        BTEEnigma bteMachine = loadManager.loadXmlToObject(path);
+
+        xmlValidator.ValidateAll(bteMachine);
+
         NUMBER_OF_ROTORS = bteMachine.getRotorsCount().intValue();
         repository = new Repository(bteMachine.getABC(), bteMachine);
-        messageCount = 0;
+        this.messageCount = 0;
+        statisticsManager.resetStatistics();
+    }
+
+    /*  הצעה של הצאט בשביל תמיד להשתמש בפוקנציה השנייה שיצרנו
+    @Override
+    public void loadXml(String path) {
+        xmlValidator.validateIsXmlFile(path);
+        try {
+            InputStream inputStream = new FileInputStream(new File(path));
+            loadXml(inputStream); // קריאה למימוש הכללי
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException("קובץ לא נמצא");
+        }
+    }
+     */
+
+    @Override
+    public void loadXml(InputStream inputStream) {
+        BTEEnigma bteMachine = loadManager.loadXmlFromStream(inputStream);
+
+        xmlValidator.ValidateAll(bteMachine);
+
+        NUMBER_OF_ROTORS = bteMachine.getRotorsCount().intValue();
+        repository = new Repository(bteMachine.getABC(), bteMachine);
+        this.messageCount = 0;
         statisticsManager.resetStatistics();
     }
 
@@ -174,7 +225,7 @@ public class EngineImpl implements Engine {
     @Override
     public void codeManual(String line, String initialRotorsPositions, int reflectorId, String plugboardInput) {
 
-        InputValidator inputValidator = new InputValidator();
+        //InputValidator inputValidator = new InputValidator();
         inputValidator.validateRotorIds(line, NUMBER_OF_ROTORS);
         List<Integer> rotorIds = Arrays.stream(line.split(","))
                 .map(String::trim)

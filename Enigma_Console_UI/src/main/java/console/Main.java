@@ -5,7 +5,7 @@ import engine.EngineImpl;
 
 public class Main {
     public static void main(String[] args) {
-        Engine engine = new EngineImpl();
-        new ConsoleUI(engine).showMenu();
+      /*  Engine engine = new EngineImpl();
+        new ConsoleUI(engine).showMenu();*/
     }
 }
