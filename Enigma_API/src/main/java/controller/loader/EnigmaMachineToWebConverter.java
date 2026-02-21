@@ -1,5 +1,5 @@
 package controller.loader;
-import dto.response.EnigmaMachineWeb;
+import dto.response.loader.EnigmaMachineWeb;
 import org.springframework.stereotype.Component;
 
 @Component

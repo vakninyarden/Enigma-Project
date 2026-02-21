@@ -47,7 +47,7 @@
         </dependency>
         <dependency>
             <groupId>patmal.course.enigma</groupId>
-            <artifactId>enigma_api</artifactId>
+            <artifactId>Enigma_API</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
