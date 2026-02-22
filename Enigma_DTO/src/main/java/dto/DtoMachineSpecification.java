@@ -13,6 +13,7 @@ public class DtoMachineSpecification {
         this.numOfMessages = numOfMessages;
         this.currentCode = currentCode;
         this.originalCode = originalCode;
+
     }
 
 

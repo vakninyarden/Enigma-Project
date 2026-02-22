@@ -2,9 +2,12 @@ package dto;
 
 //import engine.statistic.ProcessRecord;
 
+import lombok.Data;
+
 import java.util.List;
 import java.util.Map;
 
+@Data
 public class DtoStatistic {
     private Map<String, List<ProcessRecord>> statisticsData;
 

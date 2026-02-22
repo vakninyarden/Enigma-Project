@@ -1,3 +1,4 @@
+/*
 package controller.history;
 
 import controller.history.converter.HistoryMapper;
@@ -25,3 +26,4 @@ public class HistoryController {
         );
     }
 }
+*/

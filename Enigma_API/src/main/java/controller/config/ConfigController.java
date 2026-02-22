@@ -1,41 +1,96 @@
 package controller.config;
 
-
-import dto.requests.config.CreateManualConfigRequestDto;
-import dto.response.config.ManualConfigToWeb;
+import dto.DtoMachineSpecification;
+import dto.ManualConfigurationModel;
 import engine.Engine;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+import patmal.course.enigma.api.EnigmaApi;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import  patmal.course.enigma.api.model.GetCurrentMachineStatus200Response;
+import patmal.course.enigma.api.model.EnigmaManualConfigRequest;
 
+@RequiredArgsConstructor
 @RestController
-@RequestMapping("/enigma/config") //the url for the controller
-public class ConfigController {
-    private final Engine engine;
+@RequestMapping("/enigma/config")
+public class ConfigController  {
 
-    @Autowired
-    public ConfigController(Engine engine) {
-        this.engine = engine;
+    private final Engine engine;
+    private final WebToManualConfigurationRequestConverter manualConverter;
+    private final MachineDetailsResponseToWebConverter detailsConverter;
+
+
+    @PutMapping("/manual")
+    public ResponseEntity<String>
+    setManualCodeSelection(@RequestBody EnigmaManualConfigRequest request) {
+        {
+            try {
+
+                // 1️⃣ Web → Internal Command
+                ManualConfigurationModel model =
+                        manualConverter.convert(request);
+
+                // 2️⃣ Call Engine
+                engine.codeManual(
+                        model.getLine(),
+                        model.getInitialRotorsPositions(),
+                        model.getReflectorId(),
+                        model.getPlugboardInput()
+                );
+
+                return ResponseEntity.ok("Manual configuration applied successfully");
+
+            } catch (Exception e) {
+
+                return ResponseEntity.badRequest().body(e.getMessage());
+
+            }
+        }
     }
 
-  /*  @PutMapping("/manual")
-    public ResponseEntity<ManualConfigToWeb> setManualConfig(@RequestBody CreateManualConfigRequestDto ConfigRequest) {
+    @PutMapping("/automatic")
+    public ResponseEntity<String>
+    setAutomaticCodeSetup(@RequestParam("sessionID") String sessionID) {
         try {
-            engine.codeManual(
 
-            );
+            // בעתיד:
+            // Engine engine = sessionManager.getEngine(sessionID);
+
+            String generatedCode = engine.codeAuto();
+
+            return ResponseEntity.ok(generatedCode);
 
         } catch (Exception e) {
-            e.printStackTrace();
-            ManualConfigToWeb errorResponse = ManualConfigToWeb.builder()
-                    .success(false)
-                    .FeedbackMessage("Failed to update manual configuration: " + e.getMessage())
-                    .build();
-            return ResponseEntity.badRequest().body(errorResponse);
+
+            return ResponseEntity.badRequest().body(e.getMessage());
+
         }
-    }*/
+    }
+
+    @PutMapping("/reset")
+    public ResponseEntity<String>
+    resetToOriginalCode(@RequestParam("sessionID") String sessionID) {
+        try {
+
+            // בעתיד:
+            // Engine engine = sessionManager.getEngine(sessionID);
+
+            // 1️⃣ Reset machine
+            engine.resetCode();
+
+            // 2️⃣ קבלת המצב לאחר reset
+            DtoMachineSpecification spec = engine.showMachineDetails();
+
+            // 3️⃣ החזרת הקוד המקורי הקומפקטי
+            return ResponseEntity.ok(spec.getOriginalCode());
+
+        } catch (Exception e) {
+
+            return ResponseEntity.badRequest().body(e.getMessage());
+
+        }
+    }
 
 }
+
+

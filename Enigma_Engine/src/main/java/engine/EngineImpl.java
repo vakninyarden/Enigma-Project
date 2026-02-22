@@ -33,14 +33,14 @@ public class EngineImpl implements Engine {
     private final XmlFileValidator xmlValidator;
     private final InputValidator inputValidator;
     private final LoadManager loadManager;
-
+    boolean isCodeSet=false;
 
     private int NUMBER_OF_ROTORS;
     // private static int messageCount = 0;
 
     // remove static beacuse we gonna have multiple instances of the engine and we want each instance to have its own message count
     // note that EngineImpl is singleton so his one and only instance will hold the count correct
-     private  int messageCount = 0;
+    private  int messageCount = 0;
 
 
     private EnigmaMachine machine;
@@ -59,6 +59,10 @@ public class EngineImpl implements Engine {
         this.statisticsManager = new StatisticsManager();
     }
 
+    /*public int getMessageCount() {
+        return messageCount;
+    }*/
+
     @Override
     public void loadXml(String path) {
         //Autowired
@@ -74,8 +78,7 @@ public class EngineImpl implements Engine {
         statisticsManager.resetStatistics();
     }
 
-    /*  הצעה של הצאט בשביל תמיד להשתמש בפוקנציה השנייה שיצרנו
-    @Override
+    /*@Override
     public void loadXml(String path) {
         xmlValidator.validateIsXmlFile(path);
         try {
@@ -84,11 +87,12 @@ public class EngineImpl implements Engine {
         } catch (FileNotFoundException e) {
             throw new RuntimeException("קובץ לא נמצא");
         }
-    }
-     */
+    }*/
+
 
     @Override
-    public void loadXml(InputStream inputStream) {
+    public LoadMachineResult loadXml(LoadMachineCommand command) {
+        InputStream inputStream=command.getInputStream();
         BTEEnigma bteMachine = loadManager.loadXmlFromStream(inputStream);
 
         xmlValidator.ValidateAll(bteMachine);
@@ -97,10 +101,13 @@ public class EngineImpl implements Engine {
         repository = new Repository(bteMachine.getABC(), bteMachine);
         this.messageCount = 0;
         statisticsManager.resetStatistics();
+
+        String machineName = bteMachine.getName();
+        return new LoadMachineResult(machineName);
     }
 
     @Override
-    public DtoMachineSpecification showMachineDetails(boolean isCodeSet) {
+    public DtoMachineSpecification showMachineDetails() {
 
         if (!isCodeSet) {
             DtoMachineSpecification dtoMachineSpecification = new DtoMachineSpecification(repository.getRotorCount(),
@@ -238,6 +245,7 @@ public class EngineImpl implements Engine {
         setMachineSetting(rotorIds, initialRotorsPositions, reflectorIdStr, plugboardMap);
 
         createCodeForStatistic();
+        isCodeSet=true;
     }
 
     private void createCodeForStatistic() {
@@ -287,6 +295,7 @@ public class EngineImpl implements Engine {
         BuildOrinigalCodeString(machine.getSetting(), originalCode);
 
         createCodeForStatistic();
+        isCodeSet=true;
         return originalCode.toString();
     }
 

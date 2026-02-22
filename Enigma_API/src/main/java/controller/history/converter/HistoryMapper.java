@@ -1,3 +1,4 @@
+/*
 package controller.history.converter;
 import engine.statistic.StatisticsManager;
 import org.springframework.stereotype.Component;
@@ -23,4 +24,4 @@ public class HistoryMapper {
                 })
                 .collect(Collectors.toList());
     }
-}
+}*/

@@ -5,7 +5,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 
 @SpringBootApplication
-@ComponentScan({"engine", "validator", "controller"})
+@ComponentScan({"engine", "validator", "controller","dto","configuration"})
 public class EnigmaApp {
     public static void main(String[] args) {
 

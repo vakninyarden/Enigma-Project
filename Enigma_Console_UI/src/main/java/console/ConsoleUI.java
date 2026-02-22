@@ -117,7 +117,7 @@ public class ConsoleUI {
     }
 
     private void handleShowCurrentMachineStatus() {
-        DtoMachineSpecification spec = engine.showMachineDetails(isCodeSet);
+        DtoMachineSpecification spec = engine.showMachineDetails();
         System.out.println("Current machine status: ");
         System.out.println("Amount of rotors: ");
         System.out.println(spec.getNumOfRotors());
