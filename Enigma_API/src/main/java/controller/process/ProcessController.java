@@ -60,28 +60,27 @@ public class ProcessController {
 
 
 
-    @PostMapping(produces = "application/json")
+    @PostMapping
     public ResponseEntity<ProcessInput200Response> processInput(
             @RequestParam("input") String input,
-            @RequestParam("sessionID") String sessionID
+            @RequestParam("sessionId") String sessionId
     ) {
         try {
 
             String output = engine.processMessage(input);
 
-            DtoMachineSpecification spec =
-                    engine.showMachineDetails();
+            String RotorState = engine.getCurrentRotorPositions();
 
             ProcessInput200Response response =
                     new ProcessInput200Response()
                             .output(output)
                             .currentRotorsPositionCompact(
-                                    spec.getCurrentCode()
-                            );
+                                    RotorState);
 
             return ResponseEntity.ok(response);
 
         } catch (Exception e) {
+            // TO FIX RETURN MASSEGE ERROR !!!!!!!!!!!!!!!!!!!!
             return ResponseEntity.internalServerError().build();
         }
     }

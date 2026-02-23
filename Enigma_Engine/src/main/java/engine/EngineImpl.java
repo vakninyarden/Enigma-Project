@@ -28,6 +28,7 @@ import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
+// @Prototype - REMEMBER
 @Service
 public class EngineImpl implements Engine {
     private final XmlFileValidator xmlValidator;
@@ -426,4 +427,10 @@ public class EngineImpl implements Engine {
         stringBuilder.append('>');
     }
 
+
+   public String getCurrentRotorPositions() {
+        StringBuilder currentSbString = new StringBuilder();
+        BuildCurrentCodeString(machine.getSetting(), currentSbString);
+        return currentSbString.toString();
+    }
 }

@@ -36,4 +36,5 @@ public interface Engine {
 
     LoadMachineResult loadXml(LoadMachineCommand command);
 
+     String getCurrentRotorPositions() ;
     }
