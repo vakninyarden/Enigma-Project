@@ -11,8 +11,10 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class MachineStoreManager {
 
+    // the map dont need to be static beacuse sessionmanger is service and singlton
     //name to engine mapping
     private static Map<String, Engine> machineStore = new ConcurrentHashMap<>();
+
 
 
         public static void addMachine(String machineName, Engine engine) {

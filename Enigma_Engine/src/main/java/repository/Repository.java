@@ -23,6 +23,16 @@ public class Repository implements Serializable {
         this.numberOfRotors = numberOfRotors;
     }
 
+    // Copy constructor for deep copy (currently shallow copy of maps)
+ /*   public Repository(Repository other) {
+        this.abc = other.abc;
+        this.numberOfRotors = other.numberOfRotors;
+
+        // SHALLOW copy של המפות (בשלב ראשון)
+        this.rotors = new HashMap<>(other.rotors);
+        this.reflectors = new HashMap<>(other.reflectors);
+    }*/
+
     public String getAbc() {
         return abc;
     }
