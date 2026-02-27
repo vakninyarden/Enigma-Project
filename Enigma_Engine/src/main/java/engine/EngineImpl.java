@@ -15,6 +15,7 @@ import enigma.machine.component.setting.Setting;
 import enigma.machine.component.setting.SettingImpl;
 import repository.Repository;
 import validator.InputValidator;
+import validator.OrderOperationValidator;
 import validator.XmlFileValidator;
 import enigma.machine.component.machine.EnigmaMachine;
 
@@ -34,7 +35,9 @@ public class EngineImpl implements Engine {
     private final XmlFileValidator xmlValidator;
     private final InputValidator inputValidator;
     private final LoadManager loadManager;
-    boolean isCodeSet=false;
+    boolean isCodeSet = false;
+    boolean isMachineLoaded = false;
+    private final OrderOperationValidator orderOperationValidator;
 
     private int NUMBER_OF_ROTORS;
     // private static int messageCount = 0;
@@ -53,10 +56,11 @@ public class EngineImpl implements Engine {
     }*/
 
     @Autowired
-    public EngineImpl(XmlFileValidator xmlValidator, InputValidator inputValidator, LoadManager loadManager) {
+    public EngineImpl(XmlFileValidator xmlValidator, InputValidator inputValidator, LoadManager loadManager, OrderOperationValidator orderOperationValidator) {
         this.xmlValidator = xmlValidator;
         this.inputValidator = inputValidator;
         this.loadManager = loadManager;
+        this.orderOperationValidator = orderOperationValidator;
         this.statisticsManager = new StatisticsManager();
     }
 
@@ -104,12 +108,13 @@ public class EngineImpl implements Engine {
         statisticsManager.resetStatistics();
 
         String machineName = bteMachine.getName();
+        isMachineLoaded = true;
         return new LoadMachineResult(machineName);
     }
 
     @Override
     public DtoMachineSpecification showMachineDetails() {
-
+        orderOperationValidator.validateMachineLoaded(isMachineLoaded);
         if (!isCodeSet) {
             DtoMachineSpecification dtoMachineSpecification = new DtoMachineSpecification(repository.getRotorCount(),
                     repository.getReflectorCount(),
@@ -209,7 +214,9 @@ public class EngineImpl implements Engine {
 
     @Override
     public String processMessage(String message) {
-
+        message = message.toUpperCase();
+        orderOperationValidator.validateMachineLoaded(isMachineLoaded);
+        orderOperationValidator.validateCodeSet(isCodeSet);
         InputValidator.validateMessageInput(message, repository.getAbc());
         long startTime = System.nanoTime();
         messageCount++;
@@ -232,7 +239,9 @@ public class EngineImpl implements Engine {
 
     @Override
     public void codeManual(String line, String initialRotorsPositions, int reflectorId, String plugboardInput) {
-
+        initialRotorsPositions = initialRotorsPositions.toUpperCase();
+        plugboardInput = plugboardInput.toUpperCase();
+        orderOperationValidator.validateMachineLoaded(isMachineLoaded);
         //InputValidator inputValidator = new InputValidator();
         inputValidator.validateRotorIds(line, NUMBER_OF_ROTORS);
         List<Integer> rotorIds = Arrays.stream(line.split(","))
@@ -276,6 +285,7 @@ public class EngineImpl implements Engine {
 
     @Override
     public String codeAuto() {
+        orderOperationValidator.validateMachineLoaded(isMachineLoaded);
         Random rand = new Random();
         String initialRotorsPositions = "";
         int numberOfReflectors = repository.getReflectorCount();
@@ -319,11 +329,14 @@ public class EngineImpl implements Engine {
 
     @Override
     public void resetCode() {
+        orderOperationValidator.validateMachineLoaded(isMachineLoaded);
+        orderOperationValidator.validateCodeSet(isCodeSet);
         machine.resetMachine();
     }
 
     @Override
     public DtoStatistic statistics() {
+        orderOperationValidator.validateMachineLoaded(isMachineLoaded);
         DtoStatistic dtoStatistic = new DtoStatistic(statisticsManager.getStatisticsData());
         return dtoStatistic;
     }
@@ -433,4 +446,6 @@ public class EngineImpl implements Engine {
         BuildCurrentCodeString(machine.getSetting(), currentSbString);
         return currentSbString.toString();
     }
+
+
 }

@@ -80,8 +80,10 @@ public class ProcessController {
             return ResponseEntity.ok(response);
 
         } catch (Exception e) {
-            // TO FIX RETURN MASSEGE ERROR !!!!!!!!!!!!!!!!!!!!
-            return ResponseEntity.internalServerError().build();
+
+            return ResponseEntity.badRequest().body(new ProcessInput200Response()
+                    .output("Error processing input: " + e.getMessage())
+                    .currentRotorsPositionCompact(""));
         }
     }
 

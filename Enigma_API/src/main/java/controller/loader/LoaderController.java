@@ -1,20 +1,12 @@
-
 package controller.loader;
 import dto.LoadMachineCommand;
 import dto.LoadMachineResult;
 import engine.EngineImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.multipart.MultipartFile;
-import patmal.course.enigma.api.EnigmaApi;
-import java.io.InputStream;
 import patmal.course.enigma.api.model.LoadMachineFromXml200Response;
-import org.openapitools.jackson.nullable.JsonNullable;
-
-import patmal.course.enigma.api.model.LoadMachineFromXml400Response;
 
 @RequiredArgsConstructor
 @RestController
