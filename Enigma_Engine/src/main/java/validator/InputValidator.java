@@ -8,7 +8,7 @@ import java.util.List;
 
 // need to be component to be able to autowire to the engine imple instead of creating new instance of it in the engine impl
 
-@Component
+
 public class InputValidator {
     public static void validateMessageInput(String massege, String abc) {
         for (char c : massege.toCharArray()) {

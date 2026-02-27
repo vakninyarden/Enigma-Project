@@ -13,6 +13,7 @@ import enigma.machine.component.reflector.Reflector;
 import enigma.machine.component.rotor.Rotor;
 import enigma.machine.component.setting.Setting;
 import enigma.machine.component.setting.SettingImpl;
+import org.springframework.context.annotation.Scope;
 import repository.Repository;
 import validator.InputValidator;
 import validator.OrderOperationValidator;
@@ -29,24 +30,18 @@ import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-// @Prototype - REMEMBER
-@Service
+
 public class EngineImpl implements Engine {
-    private final XmlFileValidator xmlValidator;
     private final InputValidator inputValidator;
-    private final LoadManager loadManager;
-    boolean isCodeSet = false;
-    boolean isMachineLoaded = false;
+    boolean isCodeSet = true;
+    boolean isMachineLoaded = true;
     private final OrderOperationValidator orderOperationValidator;
 
-    private int NUMBER_OF_ROTORS;
     // private static int messageCount = 0;
 
     // remove static beacuse we gonna have multiple instances of the engine and we want each instance to have its own message count
     // note that EngineImpl is singleton so his one and only instance will hold the count correct
     private  int messageCount = 0;
-
-
     private EnigmaMachine machine;
     private StatisticsManager statisticsManager;
     private Repository repository;
@@ -55,62 +50,15 @@ public class EngineImpl implements Engine {
         statisticsManager = new StatisticsManager();
     }*/
 
-    @Autowired
-    public EngineImpl(XmlFileValidator xmlValidator, InputValidator inputValidator, LoadManager loadManager, OrderOperationValidator orderOperationValidator) {
-        this.xmlValidator = xmlValidator;
-        this.inputValidator = inputValidator;
-        this.loadManager = loadManager;
-        this.orderOperationValidator = orderOperationValidator;
+    public EngineImpl(Repository repository) {
+        this.repository = repository;
+        this.inputValidator = new InputValidator();
+        this.orderOperationValidator = new OrderOperationValidator();
         this.statisticsManager = new StatisticsManager();
+
     }
 
-    /*public int getMessageCount() {
-        return messageCount;
-    }*/
 
-    @Override
-    public void loadXml(String path) {
-        //Autowired
-        xmlValidator.validateIsXmlFile(path);
-
-        BTEEnigma bteMachine = loadManager.loadXmlToObject(path);
-
-        xmlValidator.ValidateAll(bteMachine);
-
-        NUMBER_OF_ROTORS = bteMachine.getRotorsCount().intValue();
-        repository = new Repository(bteMachine.getABC(), bteMachine);
-        this.messageCount = 0;
-        statisticsManager.resetStatistics();
-    }
-
-    /*@Override
-    public void loadXml(String path) {
-        xmlValidator.validateIsXmlFile(path);
-        try {
-            InputStream inputStream = new FileInputStream(new File(path));
-            loadXml(inputStream); // קריאה למימוש הכללי
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("קובץ לא נמצא");
-        }
-    }*/
-
-
-    @Override
-    public LoadMachineResult loadXml(LoadMachineCommand command) {
-        InputStream inputStream=command.getInputStream();
-        BTEEnigma bteMachine = loadManager.loadXmlFromStream(inputStream);
-
-        xmlValidator.ValidateAll(bteMachine);
-
-        NUMBER_OF_ROTORS = bteMachine.getRotorsCount().intValue();
-        repository = new Repository(bteMachine.getABC(), bteMachine);
-        this.messageCount = 0;
-        statisticsManager.resetStatistics();
-
-        String machineName = bteMachine.getName();
-        isMachineLoaded = true;
-        return new LoadMachineResult(machineName);
-    }
 
     @Override
     public DtoMachineSpecification showMachineDetails() {
@@ -243,7 +191,7 @@ public class EngineImpl implements Engine {
         plugboardInput = plugboardInput.toUpperCase();
         orderOperationValidator.validateMachineLoaded(isMachineLoaded);
         //InputValidator inputValidator = new InputValidator();
-        inputValidator.validateRotorIds(line, NUMBER_OF_ROTORS);
+        inputValidator.validateRotorIds(line, repository.getNumberOfRotors());
         List<Integer> rotorIds = Arrays.stream(line.split(","))
                 .map(String::trim)
                 .map(Integer::parseInt)
@@ -290,7 +238,7 @@ public class EngineImpl implements Engine {
         String initialRotorsPositions = "";
         int numberOfReflectors = repository.getReflectorCount();
         List<Integer> rotorIds = new ArrayList<>();
-        for (int i = 0; i < NUMBER_OF_ROTORS; i++) {
+        for (int i = 0; i < repository.getNumberOfRotors(); i++) {
             int minId = 1;
             int maxId = repository.getRotorCount();
             initialRandomRotorId(rotorIds, rand, maxId, minId);
@@ -311,7 +259,7 @@ public class EngineImpl implements Engine {
     }
 
     private String initialRandomRotorPosition(String initialRotorsPositions, Random rand) {
-        while (initialRotorsPositions.length() < NUMBER_OF_ROTORS) {
+        while (initialRotorsPositions.length() < repository.getNumberOfRotors()) {
             char randomChar = repository.getAbc().charAt(rand.nextInt(repository.getAbc().length()));
             initialRotorsPositions += randomChar;
         }
@@ -319,7 +267,7 @@ public class EngineImpl implements Engine {
     }
 
     private void initialRandomRotorId(List<Integer> rotorIds, Random rand, int maxId, int minId) {
-        while (rotorIds.size() < NUMBER_OF_ROTORS) {
+        while (rotorIds.size() < repository.getNumberOfRotors()) {
             int randomId = rand.nextInt((maxId - minId) + 1) + minId;
             if (!rotorIds.contains(randomId)) {
                 rotorIds.add(randomId);
@@ -394,9 +342,7 @@ public class EngineImpl implements Engine {
 
     }
 
-    public int getNumberOfRotors() {
-        return NUMBER_OF_ROTORS;
-    }
+
 
    Map<Character, Character> BuildAutoPlugBoard() {
         Map<Character, Character> plugboardMap = new HashMap<>();

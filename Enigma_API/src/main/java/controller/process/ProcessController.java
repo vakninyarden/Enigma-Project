@@ -1,3 +1,4 @@
+/*
 package controller.process;
 
 import dto.DtoMachineSpecification;
@@ -18,6 +19,7 @@ public class ProcessController {
     private final Engine engine;
     private final WebToProcessInputRequestConverter requestConverter;
     private final ProcessInputResponseToWebConverter responseConverter;
+*/
 /*
     @PostMapping(produces = "application/json")
     public ResponseEntity<ProcessInput200Response> processInput(
@@ -56,7 +58,8 @@ public class ProcessController {
         }
     }
 }
-*/
+*//*
+
 
 
 
@@ -89,3 +92,4 @@ public class ProcessController {
 
 
 }
+*/

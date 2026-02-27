@@ -1,3 +1,4 @@
+/*
 package console;
 import dto.DtoMachineSpecification;
 import dto.DtoStatistic;
@@ -116,6 +117,8 @@ public class ConsoleUI {
         }
     }
 
+
+
     private void handleShowCurrentMachineStatus() {
         DtoMachineSpecification spec = engine.showMachineDetails();
         System.out.println("Current machine status: ");
@@ -145,14 +148,16 @@ public class ConsoleUI {
         System.out.println("1 = I, 2 = II, 3 = III, 4 = IV, 5 = V");
 
         int reflectorId;
-/*        try {*/
+        try {
+
             reflectorId = scanner.nextInt();
             scanner.nextLine(); // Consume the newline character
-      /*  } catch (InputMismatchException e) {
+  } catch (InputMismatchException e) {
             scanner.nextLine();
             System.out.println("Invalid choice, the reflector id must be a number between 1-5.");
             return;
-        }*/
+        }
+
 
         System.out.println("Please enter the plugboard settings (e.g. ABCDEF), or leave empty for no plugboard:");
         String plugboardLine = scanner.nextLine();
@@ -261,3 +266,4 @@ public class ConsoleUI {
 
     }
 }
+*/

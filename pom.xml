@@ -23,6 +23,8 @@
         <module>Enigma_App</module>
         <module>Enigma_API</module>
         <module>Enigma_DAL</module>
+        <module>Enigma_Session</module>
+        <module>Enigma_Service</module>
     </modules>
 
     <properties>

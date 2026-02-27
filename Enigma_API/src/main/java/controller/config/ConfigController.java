@@ -5,56 +5,57 @@ import dto.ManualConfigurationModel;
 import engine.Engine;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import patmal.course.enigma.api.EnigmaApi;
 import org.springframework.http.ResponseEntity;
-import  patmal.course.enigma.api.model.GetCurrentMachineStatus200Response;
 import patmal.course.enigma.api.model.EnigmaManualConfigRequest;
+import patmal.course.enigma.service.ConfigurationService;
+import patmal.course.enigma.session.SessionManager;
 
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/enigma/config")
-public class ConfigController  {
+public class ConfigController {
 
-    private final Engine engine;
+    private final SessionManager sessionManager;
     private final WebToManualConfigurationRequestConverter manualConverter;
     private final MachineDetailsResponseToWebConverter detailsConverter;
-
+    private final ConfigurationService configurationService;
 
     @PutMapping("/manual")
-    public ResponseEntity<String>
-    setManualCodeSelection(@RequestBody EnigmaManualConfigRequest request) {
-        {
-            try {
-
-                // 1️⃣ Web → Internal Command
+    public ResponseEntity<String> setManualCodeSelection(@RequestBody EnigmaManualConfigRequest request) {
+        ManualConfigurationModel model =
+                manualConverter.convert(request);
+        try {
+            configurationService.test(sessionManager, request.getSessionID(), model);
+       /* try {
                 ManualConfigurationModel model =
                         manualConverter.convert(request);
-
-                // 2️⃣ Call Engine
+                engine = sessionManager.getEngineBySessionId(request.getSessionID());
                 engine.codeManual(
                         model.getLine(),
                         model.getInitialRotorsPositions(),
                         model.getReflectorId(),
                         model.getPlugboardInput()
-                );
+                );*/
 
-                return ResponseEntity.ok("Manual configuration applied successfully");
 
-            } catch (Exception e) {
+            return ResponseEntity.ok("Manual configuration applied successfully");
+        } catch (
+                Exception e) {
 
-                return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
 
-            }
         }
     }
 
-    @PutMapping("/automatic")
+
+
+  /*  @PutMapping("/automatic")
     public ResponseEntity<String>
     setAutomaticCodeSetup(@RequestParam("sessionID") String sessionID) {
         try {
 
             // בעתיד:
-            // Engine engine = sessionManager.getEngine(sessionID);
+            engine = sessionManager.getEngineBySessionId(sessionID);
 
             String generatedCode = engine.codeAuto();
 
@@ -65,9 +66,11 @@ public class ConfigController  {
             return ResponseEntity.badRequest().body(e.getMessage());
 
         }
-    }
+    }*/
 
-    @PutMapping("/reset")
+
+
+/*    @PutMapping("/reset")
     public ResponseEntity<String>
     resetToOriginalCode(@RequestParam("sessionID") String sessionID) {
         try {
@@ -89,7 +92,7 @@ public class ConfigController  {
             return ResponseEntity.badRequest().body(e.getMessage());
 
         }
-    }
+    }*/
 
 }
 

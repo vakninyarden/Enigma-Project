@@ -10,11 +10,6 @@ import java.io.InputStream;
 import java.io.IOException;
 
 public interface Engine {
-   // public int getMessageCount();
-
-    void loadXml(String path);
-
-    //void loadXml(InputStream inputStream); //To support loading from resources
 
     DtoMachineSpecification showMachineDetails();
 
@@ -32,9 +27,6 @@ public interface Engine {
 
     void loadMachineStateFromFile(String path) throws IOException;
 
-    int getNumberOfRotors();
-
-    LoadMachineResult loadXml(LoadMachineCommand command);
 
      String getCurrentRotorPositions() ;
     }

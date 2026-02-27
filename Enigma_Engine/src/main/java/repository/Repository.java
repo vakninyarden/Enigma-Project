@@ -5,19 +5,22 @@ import enigma.machine.component.reflector.Reflector;
 import enigma.machine.component.reflector.ReflectorImpl;
 import enigma.machine.component.rotor.Rotor;
 import enigma.machine.component.rotor.RotorImpl;
-
 import java.util.*;
 import java.io.Serializable;
 
+
 public class Repository implements Serializable {
+    int numberOfRotors;
     private final Map<Integer, Rotor> rotors;
     private final Map<String, Reflector> reflectors;
     private final String abc;
 
-    public Repository(String abc, BTEEnigma bteEnigma) {
+
+    public Repository(String abc, BTEEnigma bteEnigma,int numberOfRotors) {
         this.abc = abc.toUpperCase();
         this.rotors = buildRotorsRepository(bteEnigma.getBTERotors(), this.abc);
         this.reflectors = buildReflectorsRepository(bteEnigma.getBTEReflectors());
+        this.numberOfRotors = numberOfRotors;
     }
 
     public String getAbc() {
@@ -97,5 +100,7 @@ public class Repository implements Serializable {
         return new ReflectorImpl(xmlId, mapping);
     }
 
-
+    public int getNumberOfRotors() {
+        return numberOfRotors;
+    }
 }
