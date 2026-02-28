@@ -34,6 +34,8 @@ public class SessionManager {
         machineNameBySession.put(sessionId, machineName);
 
 
+
+
       //  MachineStoreManager.addMachine(machineName, engine);
 
        // machineNameBySession .put(sessionId, machineName);

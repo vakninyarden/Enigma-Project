@@ -16,6 +16,16 @@ public class ConfigurationService {
     }
 
 
+    public DtoMachineSpecification GetCompactCurrentMachineDetailsService(String sessionId) {
+        Engine engine = sessionManager.getEngineBySessionId(sessionId);
+        return engine.showMachineDetails();
+    }
+    public String getRotorsPos(String sessionId) {
+        Engine engine = sessionManager.getEngineBySessionId(sessionId);
+        return engine.getCurrentRotorPositions();
+    }
+
+
     public void CodeManualService(String sessionId, ManualConfigurationModel model)
     {
         Engine engine = sessionManager.getEngineBySessionId(sessionId);
