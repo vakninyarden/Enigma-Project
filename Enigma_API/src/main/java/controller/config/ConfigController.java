@@ -2,6 +2,7 @@ package controller.config;
 
 import dto.DtoMachineSpecification;
 import dto.ManualConfigurationModel;
+import dto.snapshot.MachineSnapshot;
 import engine.Engine;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -29,29 +30,19 @@ public class ConfigController {
 
 
 
-    @GetMapping()
-    public ResponseEntity<GetCurrentMachineStatus200Response> getCurrentMachineDetails(@RequestParam("sessionID") String sessionID,
-                                                                                            @RequestParam("verbose") boolean verbose) {
-        if(!verbose){
-            DtoMachineSpecification compactSpec = configurationService.GetCompactCurrentMachineDetailsService(sessionID);
-            String CurrentRotorsPositionCompact=configurationService.getRotorsPos(sessionID);
-            GetCurrentMachineStatus200ResponseOneOf1 compactResponse = detailsConverter.convert(compactSpec,CurrentRotorsPositionCompact);
-            return ResponseEntity.ok(compactResponse);
-        }
+    @GetMapping
+    public ResponseEntity<GetCurrentMachineStatus200Response>
+    getCurrentMachineStatus(
+            @RequestParam("sessionID") String sessionID,
+            @RequestParam(value = "verbose", defaultValue = "false") boolean verbose) {
 
-        else{
-            //Engine engine = sessionManager.getEngineBySessionId(sessionID);
+        MachineSnapshot snapshot =
+                configurationService.getSnapshot(sessionID);
 
-
-            //DtoMachineSpecification spec = engine.showMachineDetails();
-            GetCurrentMachineStatus200ResponseOneOf response = detailsConverter.convertVerbose(spec);
-            return ResponseEntity.ok(response);
-        }
-
-
-
+        return ResponseEntity.ok(
+                detailsConverter.convert(snapshot, verbose)
+        );
     }
-
 
 
     @PutMapping("/manual")

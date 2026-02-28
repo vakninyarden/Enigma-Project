@@ -2,6 +2,7 @@ package patmal.course.enigma.service;
 
 import dto.DtoMachineSpecification;
 import dto.ManualConfigurationModel;
+import dto.snapshot.MachineSnapshot;
 import engine.Engine;
 import org.springframework.stereotype.Service;
 import patmal.course.enigma.session.SessionManager;
@@ -20,11 +21,15 @@ public class ConfigurationService {
         Engine engine = sessionManager.getEngineBySessionId(sessionId);
         return engine.showMachineDetails();
     }
-    public String getRotorsPos(String sessionId) {
+ /*   public String getRotorsPos(String sessionId) {
         Engine engine = sessionManager.getEngineBySessionId(sessionId);
         return engine.getCurrentRotorPositions();
-    }
+    }*/
 
+    public MachineSnapshot getSnapshot(String sessionId) {
+        Engine engine = sessionManager.getEngineBySessionId(sessionId);
+        return engine.getMachineSnapshot();
+    }
 
     public void CodeManualService(String sessionId, ManualConfigurationModel model)
     {

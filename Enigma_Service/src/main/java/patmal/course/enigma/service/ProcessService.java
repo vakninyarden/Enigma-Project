@@ -3,6 +3,7 @@ package patmal.course.enigma.service;
 
 import dto.ProcessInputResult;
 import engine.Engine;
+import enigma.machine.component.setting.Setting;
 import org.springframework.stereotype.Service;
 import patmal.course.enigma.session.SessionManager;
 

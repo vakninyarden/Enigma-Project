@@ -3,6 +3,8 @@ package engine;
 import dto.*;
 import bte.component.jaxb.BTEEnigma;
 import dto.ProcessRecord;
+import dto.snapshot.MachineSnapshot;
+import dto.snapshot.RotorSnapshot;
 import engine.statistic.StatisticsManager;
 import enigma.machine.component.keyboard.KeyBoard;
 import enigma.machine.component.keyboard.KeyBoardImpl;
@@ -97,16 +99,36 @@ public class EngineImpl implements Engine {
 
     }
 
-    private void BuildCurrentCode(StringBuilder currentSbString, Setting machineOrinialCode) {
+    /*private void BuildCurrentCode(StringBuilder currentSbString, Setting machineOrinialCode) {
 
         currentSbString.append('<');
         List<Setting.RotorPosition> activeRotors = machineOrinialCode.getActiveRotors();
         for (int i = 0; i < activeRotors.size(); i++) {
+            Rotor rotor = activeRotors.get(i).getRotor();
             int currentPosition = activeRotors.get(i).getRotor().getCurrentPosition();
             currentSbString.append(repository.getRotor(activeRotors.get(i).getRotor().getRotorId()).getRightMapping().get(currentPosition));
             currentSbString.append('(');
             int abcLength = repository.getAbc().length();
             int DistanceFromNotch = (activeRotors.get(i).getRotor().getNotchIndex() - currentPosition + abcLength) % abcLength;
+            currentSbString.append(DistanceFromNotch);
+            currentSbString.append(')');
+            if (i != activeRotors.size() - 1) {
+                currentSbString.append(',');
+            }
+        }
+        currentSbString.append('>');
+    }*/
+     private void BuildCurrentCode(StringBuilder currentSbString, Setting machineOrinialCode) {
+
+        currentSbString.append('<');
+        List<Setting.RotorPosition> activeRotors = machineOrinialCode.getActiveRotors();
+         int abcLength = repository.getAbc().length();
+         for (int i = 0; i < activeRotors.size(); i++) {
+            Rotor rotor = activeRotors.get(i).getRotor();
+            int currentPosition = rotor.getCurrentPosition();
+            currentSbString.append(rotor.getRightMapping().get(currentPosition));
+            currentSbString.append('(');
+            int DistanceFromNotch = (rotor.getNotchIndex() - currentPosition + abcLength) % abcLength;
             currentSbString.append(DistanceFromNotch);
             currentSbString.append(')');
             if (i != activeRotors.size() - 1) {
@@ -132,6 +154,26 @@ public class EngineImpl implements Engine {
 
     private void BuildOrignialCode(Setting machineOrinialCode, StringBuilder sb) {
         sb.append('<');
+        List<Setting.RotorPosition> activeRotors = machineOrinialCode.getActiveRotors();
+        int abcLength = repository.getAbc().length();
+
+        for (int i = 0; i < activeRotors.size(); i++) {
+            Rotor rotor = activeRotors.get(i).getRotor();
+            int orinigalPosition = rotor.getOriginalPosition();
+            sb.append(rotor.getRightMapping().get(orinigalPosition));
+            sb.append('(');
+            int DistanceFromNotch = (rotor.getNotchIndex() - orinigalPosition + abcLength) % abcLength;
+            sb.append(DistanceFromNotch);
+            sb.append(')');
+            if (i != activeRotors.size() - 1) {
+                sb.append(',');
+            }
+        }
+        sb.append('>');
+
+    }
+    /*private void BuildOrignialCode(Setting machineOrinialCode, StringBuilder sb) {
+        sb.append('<');
         for (int i = 0; i < machineOrinialCode.getActiveRotors().size(); i++) {
             int orinigalPosition = machineOrinialCode.getActiveRotors().get(i).getRotor().getOriginalPosition();
             sb.append(repository.getRotor(machineOrinialCode.getActiveRotors().get(i).getRotor().getRotorId()).getRightMapping().get(orinigalPosition));
@@ -145,7 +187,7 @@ public class EngineImpl implements Engine {
         }
         sb.append('>');
 
-    }
+    }*/
 
     private static void BuildRotorsIdString(Setting machineOrinialCode, StringBuilder sb) {
         sb.append('<');
@@ -322,7 +364,6 @@ public class EngineImpl implements Engine {
         }
     }
 
-
     public  Map<Character, Character> buildPlugboardMap(String input) {
         Map<Character, Character> plugboard = new HashMap<>();
 
@@ -341,7 +382,6 @@ public class EngineImpl implements Engine {
         return plugboard;
 
     }
-
 
 
    Map<Character, Character> BuildAutoPlugBoard() {
@@ -393,5 +433,53 @@ public class EngineImpl implements Engine {
         return currentSbString.toString();
     }
 
+    @Override
+    public MachineSnapshot getMachineSnapshot() {
+        Setting setting=machine.getSetting();
+        List<RotorSnapshot> rotorSnapshots = new ArrayList<>();
+        for(Setting.RotorPosition rotorPosition : setting.getActiveRotors()){
+            Rotor rotor = rotorPosition.getRotor();
 
+            int originalPos = rotor.getOriginalPosition();
+            int currentPos = rotor.getCurrentPosition();
+
+            char originalLetter =
+                    repository.getRotor(rotor.getRotorId())
+                            .getRightMapping()
+                            .get(originalPos);
+
+            char currentLetter = rotor.getRightMapping().get(currentPos);
+
+            rotorSnapshots.add(
+                    RotorSnapshot.builder()
+                            .rotorId(rotor.getRotorId())
+                            .originalPosition(rotor.getOriginalPosition())
+                            .currentPosition(rotor.getCurrentPosition())
+                            .originalLetter(originalLetter)
+                            .currentLetter(currentLetter)
+                            .notchIndex(rotor.getNotchIndex())
+                            .alphabetSize(rotor.getRightMapping().size())
+                            .build()
+            );
+        }
+        StringBuilder originalCode = new StringBuilder();
+        StringBuilder currentCode = new StringBuilder();
+
+        BuildOrinigalCodeString(setting, originalCode);
+        BuildCurrentCodeString(setting, currentCode);
+
+        Map<Character, Character> plugboardMap = setting.getPlugboard().getPlugboardMap();
+
+
+        return MachineSnapshot.builder()
+                .totalRotors(repository.getRotorCount())
+                .totalReflectors(repository.getReflectorCount())
+                .totalProcessedMessages(messageCount)
+                .originalCodeCompact(originalCode.toString())
+                .currentCodeCompact(currentCode.toString())
+                .rotors(rotorSnapshots)
+                .reflectorId(setting.getReflector().getReflectorId())
+                .plugboard(plugboardMap)
+                .build();
+    }
 }

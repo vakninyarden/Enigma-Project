@@ -1,9 +1,7 @@
 package engine;
 
-import dto.DtoMachineSpecification;
-import dto.DtoStatistic;
-import dto.LoadMachineCommand;
-import dto.LoadMachineResult;
+import dto.*;
+import dto.snapshot.MachineSnapshot;
 
 import java.io.InputStream;
 
@@ -27,6 +25,8 @@ public interface Engine {
 
     void loadMachineStateFromFile(String path) throws IOException;
 
+    String getCurrentRotorPositions();
 
-     String getCurrentRotorPositions() ;
-    }
+    MachineSnapshot getMachineSnapshot();
+
+}
