@@ -15,9 +15,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SessionManager {
     // sessionId to machine name mapping
     // dont need to be static map beacuse this is singelton
-    private final Map<String, Engine> enginesBySession  = new ConcurrentHashMap<>();
+    private  Map<String, Engine> enginesBySession  = new ConcurrentHashMap<>();
 
-    private  final Map<String, String> machineNameBySession  = new ConcurrentHashMap<>();
+    private   Map<String, String> machineNameBySession  = new ConcurrentHashMap<>();
 
 
 
@@ -44,13 +44,12 @@ public class SessionManager {
             if(!enginesBySession .containsKey(sessionId)){
                 throw new IllegalArgumentException("Unknown session ID: " + sessionId);
             }
-            machineNameBySession .remove(sessionId);
+            machineNameBySession.remove(sessionId);
             enginesBySession.remove(sessionId);
-
         }
 
         public  Engine getEngineBySessionId(String sessionId) {
-            if(!machineNameBySession .containsKey(sessionId)){
+            if(!enginesBySession.containsKey(sessionId)){
                 throw new IllegalArgumentException("Unknown session ID: " + sessionId);
             }
             return enginesBySession.get(sessionId);

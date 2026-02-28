@@ -38,7 +38,12 @@ public class Repository implements Serializable {
     }
 
     public Rotor getRotor(int index) {
-        return rotors.get(index);
+        return createRotor(index);
+    }
+
+    public Rotor createRotor(int index){
+        Rotor newRotor = rotors.get(index);
+        return new RotorImpl(newRotor.getRotorId(), newRotor.getNotchIndex(), newRotor.getRightMapping(), newRotor.getLeftMapping());
     }
 
 

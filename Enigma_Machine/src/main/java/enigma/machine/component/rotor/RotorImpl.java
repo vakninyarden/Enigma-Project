@@ -75,6 +75,11 @@ public class RotorImpl implements Rotor, Serializable {
         return rightMapping;
     }
 
+
+    public List<Character> getLeftMapping() {
+        return leftMapping;
+    }
+
     public int getCurrentPosition() {
         return currentPosition;
     }

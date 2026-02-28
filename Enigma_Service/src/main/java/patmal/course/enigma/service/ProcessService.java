@@ -8,19 +8,18 @@ import patmal.course.enigma.session.SessionManager;
 
 @Service
 public class ProcessService {
-    SessionManager sessionManager;
-    Engine engine;
+    private final SessionManager sessionManager;
 
-    public ProcessInputResult processInput(String input,String sessionId) {
+    public ProcessService(SessionManager sessionManager) {
+        this.sessionManager = sessionManager;
+    }
 
-        engine = sessionManager.getEngineBySessionId(sessionId);
 
+    public ProcessInputResult processInput(String sessionId,String input) {
+        Engine engine = sessionManager.getEngineBySessionId(sessionId);
         String output = engine.processMessage(input);
-
         String RotorState = engine.getCurrentRotorPositions();
-
         return new ProcessInputResult(output, RotorState);
-
     }
 }
 

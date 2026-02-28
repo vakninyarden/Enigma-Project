@@ -17,12 +17,13 @@ public class ProcessController {
 
     @PostMapping
     public ResponseEntity<ProcessInput200Response> processInput(
-            @RequestParam("input") String input,
-            @RequestParam("sessionId") String sessionId
+
+            @RequestParam("sessionId") String sessionId,
+            @RequestParam("input") String input
     ) {
         try {
 
-            ProcessInputResult serviceModel = processService.processInput(input, sessionId);
+            ProcessInputResult serviceModel = processService.processInput(sessionId, input);
             ProcessInput200Response response = responseConverter.convert(serviceModel);
             return ResponseEntity.ok(response);
 

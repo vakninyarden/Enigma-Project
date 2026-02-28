@@ -18,7 +18,6 @@ public class ConfigurationService {
 
     public void CodeManualService(String sessionId, ManualConfigurationModel model)
     {
-
         Engine engine = sessionManager.getEngineBySessionId(sessionId);
         engine.codeManual(
                 model.getLine(),
