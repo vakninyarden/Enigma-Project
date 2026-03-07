@@ -1,4 +1,4 @@
-package dto.snapshot;
+package dto.config.details;
 
 import lombok.Builder;
 import lombok.Data;

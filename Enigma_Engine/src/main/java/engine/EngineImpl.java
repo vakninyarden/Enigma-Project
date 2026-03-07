@@ -1,10 +1,9 @@
 package engine;
 
 import dto.*;
-import bte.component.jaxb.BTEEnigma;
 import dto.ProcessRecord;
-import dto.snapshot.MachineSnapshot;
-import dto.snapshot.RotorSnapshot;
+import dto.config.details.MachineSnapshot;
+import dto.config.details.RotorSnapshot;
 import engine.statistic.StatisticsManager;
 import enigma.machine.component.keyboard.KeyBoard;
 import enigma.machine.component.keyboard.KeyBoardImpl;
@@ -15,17 +14,12 @@ import enigma.machine.component.reflector.Reflector;
 import enigma.machine.component.rotor.Rotor;
 import enigma.machine.component.setting.Setting;
 import enigma.machine.component.setting.SettingImpl;
-import org.springframework.context.annotation.Scope;
 import repository.Repository;
 import validator.InputValidator;
 import validator.OrderOperationValidator;
-import validator.XmlFileValidator;
 import enigma.machine.component.machine.EnigmaMachine;
 
 // Spring annotations and imports for dependency injection and service declaration
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 
 
 import java.io.*;
@@ -38,7 +32,7 @@ public class EngineImpl implements Engine {
     boolean isCodeSet = true;
     boolean isMachineLoaded = true;
     private final OrderOperationValidator orderOperationValidator;
-
+    //private  String MachineName;
     // private static int messageCount = 0;
 
     // remove static beacuse we gonna have multiple instances of the engine and we want each instance to have its own message count
@@ -482,4 +476,6 @@ public class EngineImpl implements Engine {
                 .plugboard(plugboardMap)
                 .build();
     }
+
+
 }

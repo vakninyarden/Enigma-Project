@@ -1,8 +1,7 @@
 package controller.config;
 
-import dto.DtoMachineSpecification;
-import dto.snapshot.MachineSnapshot;
-import dto.snapshot.RotorSnapshot;
+import dto.config.details.MachineSnapshot;
+import dto.config.details.RotorSnapshot;
 import org.springframework.stereotype.Component;
 import patmal.course.enigma.api.model.*;
 

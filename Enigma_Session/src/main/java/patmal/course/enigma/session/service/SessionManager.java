@@ -1,10 +1,8 @@
-package patmal.course.enigma.session;
+package patmal.course.enigma.session.service;
 
 import engine.Engine;
 import engine.EngineImpl;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import patmal.course.enigma.session.dto.SessionDTO;
 import repository.Repository;
 import repository.XMLRepository;
 

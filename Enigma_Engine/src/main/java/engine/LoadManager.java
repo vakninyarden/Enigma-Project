@@ -1,8 +1,8 @@
 package engine;
 
 import bte.component.jaxb.BTEEnigma;
-import dto.LoadMachineCommand;
-import dto.LoadMachineResult;
+import dto.load.LoadMachineCommand;
+import dto.load.LoadMachineResult;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
@@ -13,7 +13,6 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import repository.Repository;
 import repository.XMLRepository;

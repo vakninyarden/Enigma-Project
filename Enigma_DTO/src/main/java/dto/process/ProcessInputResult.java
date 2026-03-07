@@ -1,6 +1,5 @@
 
-package dto;
-import lombok.Builder;
+package dto.process;
 import lombok.Data;
 
 @Data

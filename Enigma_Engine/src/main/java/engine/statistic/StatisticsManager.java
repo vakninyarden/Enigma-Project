@@ -1,4 +1,5 @@
 package engine.statistic;
+import dto.DtoStatistic;
 import dto.ProcessRecord;
 import java.util.HashMap;
 import java.util.List;
@@ -8,6 +9,11 @@ import java.io.Serializable;
 
 public class StatisticsManager implements Serializable {
     private Map<String, List<ProcessRecord>> statisticsData;
+
+    private static Map<String,Map<String, List<ProcessRecord>>> historyByMachineName = new HashMap<>();
+
+    private static Map<String,Map<String, List<ProcessRecord>>> historyBySessionId = new HashMap<>();
+
     private String currentCode;
 
     public StatisticsManager() {
@@ -31,6 +37,10 @@ public class StatisticsManager implements Serializable {
     public void resetStatistics() {
         statisticsData.clear();
     }
+
+   // public void addStatisticByMachineName(String machineName, DtoStatistic statistic) {
+     //   statisticsByMachineName.computeIfAbsent(machineName, k -> new ArrayList<>()).add(statistic);
+    //}
 
 
 }

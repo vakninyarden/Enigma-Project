@@ -1,6 +1,5 @@
-package dto;
+package dto.config.manual;
 
-import lombok.Builder;
 import lombok.Data;
 
 @Data

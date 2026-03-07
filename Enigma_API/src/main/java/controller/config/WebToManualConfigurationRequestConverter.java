@@ -1,5 +1,5 @@
 package controller.config;
-import dto.ManualConfigurationModel;
+import dto.config.manual.ManualConfigurationModel;
 import patmal.course.enigma.api.model.EnigmaManualConfigRequest;
 import org.springframework.stereotype.Component;
 

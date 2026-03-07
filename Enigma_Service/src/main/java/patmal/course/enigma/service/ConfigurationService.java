@@ -1,11 +1,11 @@
 package patmal.course.enigma.service;
 
 import dto.DtoMachineSpecification;
-import dto.ManualConfigurationModel;
-import dto.snapshot.MachineSnapshot;
+import dto.config.manual.ManualConfigurationModel;
+import dto.config.details.MachineSnapshot;
 import engine.Engine;
 import org.springframework.stereotype.Service;
-import patmal.course.enigma.session.SessionManager;
+import patmal.course.enigma.session.service.SessionManager;
 
 @Service
 public class ConfigurationService {

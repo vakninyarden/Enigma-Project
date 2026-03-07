@@ -1,11 +1,10 @@
 package patmal.course.enigma.service;
 
 
-import dto.ProcessInputResult;
+import dto.process.ProcessInputResult;
 import engine.Engine;
-import enigma.machine.component.setting.Setting;
 import org.springframework.stereotype.Service;
-import patmal.course.enigma.session.SessionManager;
+import patmal.course.enigma.session.service.SessionManager;
 
 @Service
 public class ProcessService {

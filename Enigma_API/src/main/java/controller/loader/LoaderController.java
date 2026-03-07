@@ -1,6 +1,6 @@
 package controller.loader;
-import dto.LoadMachineCommand;
-import dto.LoadMachineResult;
+import dto.load.LoadMachineCommand;
+import dto.load.LoadMachineResult;
 import engine.LoadManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

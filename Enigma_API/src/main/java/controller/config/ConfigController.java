@@ -1,21 +1,14 @@
 package controller.config;
 
 import dto.DtoMachineSpecification;
-import dto.ManualConfigurationModel;
-import dto.snapshot.MachineSnapshot;
-import engine.Engine;
-import lombok.Getter;
+import dto.config.manual.ManualConfigurationModel;
+import dto.config.details.MachineSnapshot;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import patmal.course.enigma.api.model.EnigmaManualConfigRequest;
 import patmal.course.enigma.service.ConfigurationService;
-import patmal.course.enigma.session.SessionManager;
 import patmal.course.enigma.api.model.GetCurrentMachineStatus200Response; // main response model for the endpoint(interface)
-import patmal.course.enigma.api.model.GetCurrentMachineStatus200ResponseOneOf; // for verbose=true
-import patmal.course.enigma.api.model.GetCurrentMachineStatus200ResponseOneOf1; // for verbose=false
-
-
 
 
 @RequiredArgsConstructor

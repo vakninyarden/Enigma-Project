@@ -15,16 +15,15 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
-        <module>Enigma_Console_UI</module>
         <module>Enigma_DTO</module>
         <module>Enigma_Engine</module>
         <module>Enigma_Machine</module>
         <module>Loader</module>
         <module>Enigma_App</module>
         <module>Enigma_API</module>
-        <module>Enigma_DAL</module>
         <module>Enigma_Session</module>
         <module>Enigma_Service</module>
+        <module>Enigma_DAL</module>
     </modules>
 
     <properties>

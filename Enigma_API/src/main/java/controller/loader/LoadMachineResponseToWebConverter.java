@@ -1,6 +1,6 @@
 package controller.loader;
 
-import dto.LoadMachineResult;
+import dto.load.LoadMachineResult;
 import org.springframework.stereotype.Component;
 import patmal.course.enigma.api.model.LoadMachineFromXml200Response;
 

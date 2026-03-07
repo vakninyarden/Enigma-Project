@@ -1,6 +1,6 @@
 package controller.process;
 
-import dto.ProcessInputResult;
+import dto.process.ProcessInputResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

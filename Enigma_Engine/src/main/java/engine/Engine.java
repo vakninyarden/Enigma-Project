@@ -1,9 +1,7 @@
 package engine;
 
 import dto.*;
-import dto.snapshot.MachineSnapshot;
-
-import java.io.InputStream;
+import dto.config.details.MachineSnapshot;
 
 import java.io.IOException;
 
@@ -28,5 +26,6 @@ public interface Engine {
     String getCurrentRotorPositions();
 
     MachineSnapshot getMachineSnapshot();
+
 
 }

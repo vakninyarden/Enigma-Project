@@ -2,11 +2,9 @@ package controller.session;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import patmal.course.enigma.api.model.CreateSession200Response;
 import patmal.course.enigma.api.model.CreateSessionRequest;
-import patmal.course.enigma.session.SessionManager;
+import patmal.course.enigma.session.service.SessionManager;
 
 @RequiredArgsConstructor
 @RestController

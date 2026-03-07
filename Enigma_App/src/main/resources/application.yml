@@ -1,0 +1,24 @@
+server:
+  port: 8080
+  error:
+    include-message: always
+
+spring:
+  application:
+    name: enigma-machine
+
+  # Database Connection Configuration
+  datasource:
+    url: jdbc:postgresql://localhost:5432/enigma
+    username: postgres
+    password: enigma
+
+  # JPA / Hibernate Configuration
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true # Makes the console SQL readable
