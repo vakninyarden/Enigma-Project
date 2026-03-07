@@ -7,5 +7,5 @@ import patmal.course.enigma.reflector.ReflectorEntity;
 import java.util.UUID;
 
 @Repository
-public interface RotorRepository extends JpaRepository<ReflectorEntity, UUID> {
+public interface RotorRepository extends JpaRepository<RotorEntity, UUID> {
 }

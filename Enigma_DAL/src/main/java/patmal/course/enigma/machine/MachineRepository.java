@@ -7,4 +7,5 @@ import java.util.UUID;
 
 @Repository
 public interface MachineRepository extends JpaRepository<MachineEntity, UUID> {
+    boolean existsByName(String machineName);
 }

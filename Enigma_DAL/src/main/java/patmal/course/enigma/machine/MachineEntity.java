@@ -51,7 +51,7 @@ public class MachineEntity {
     }
 
 
-   /* public void addRotor(RotorEntity rotor) {
+    public void addRotor(RotorEntity rotor) {
         rotor.setMachine(this);
         this.rotors.add(rotor);
     }
@@ -59,5 +59,5 @@ public class MachineEntity {
     public void addReflector(ReflectorEntity reflector) {
         reflector.setMachine(this);
         this.reflectors.add(reflector);
-    }*/
+    }
 }

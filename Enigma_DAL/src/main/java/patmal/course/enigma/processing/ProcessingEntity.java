@@ -23,16 +23,16 @@ public class ProcessingEntity {
 
 
     //the code that the input encrpyted/decrypted with
-    @Column(name = "code_text", nullable = false, length = 4000)
+    @Column(name = "code", nullable = false, length = 4000)
     private String code;
 
-    @Column(name = "input_text", nullable = false, length = 4000)
+    @Column(name = "input", nullable = false, length = 4000)
     private String inputText;
 
-    @Column(name = "output_text", nullable = false, length = 4000)
+    @Column(name = "output", nullable = false, length = 4000)
     private String outputText;
 
-    @Column(name = "time_ns", nullable = false)
+    @Column(name = "time", nullable = false)
     private Long timeNs;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -1,11 +1,12 @@
 package controller.loader;
 import dto.load.LoadMachineCommand;
 import dto.load.LoadMachineResult;
-import engine.LoadManager;
+import patmal.course.enigma.LoadManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import patmal.course.enigma.LoadService;
 import patmal.course.enigma.api.model.LoadMachineFromXml200Response;
 
 @RequiredArgsConstructor
@@ -13,7 +14,7 @@ import patmal.course.enigma.api.model.LoadMachineFromXml200Response;
 @RequestMapping("/enigma")
 public class LoaderController {
 
-    private final LoadManager loadManager;
+    private final LoadService LoadService;
     private final WebToLoadMachineRequestConverter webToLoadMachineRequestConverter;
 
 
@@ -33,7 +34,7 @@ public class LoaderController {
             LoadMachineCommand command =
                     webToLoadMachineRequestConverter.convert(file);
 
-            LoadMachineResult result = loadManager.loadXml(command);
+            LoadMachineResult result = LoadService.loadMachine(command);
 
             return ResponseEntity.ok
                     (new LoadMachineFromXml200Response().

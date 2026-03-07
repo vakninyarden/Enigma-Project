@@ -1,4 +1,4 @@
-package validator;
+package patmal.course.enigma;
 
 import bte.component.jaxb.*;
 import exception.fileexception.*;

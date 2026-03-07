@@ -1,4 +1,4 @@
-package validator;
+package patmal.course.enigma;
 
 import bte.component.jaxb.BTEEnigma;
 import bte.component.jaxb.BTEReflector;

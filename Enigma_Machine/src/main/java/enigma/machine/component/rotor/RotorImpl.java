@@ -1,8 +1,12 @@
 package enigma.machine.component.rotor;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.List;
 import java.io.Serializable;
-
+@Setter
+@Getter
 public class RotorImpl implements Rotor, Serializable {
     private final int id;
     private final int notchPosition;

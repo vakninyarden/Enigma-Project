@@ -18,10 +18,10 @@ public class ReflectorEntity {
     @Column(name = "id", nullable = false)
     private UUID id;
 
-    @Column(name = "input_text", nullable = false)
+    @Column(name = "input", nullable = false)
     private String input;
 
-    @Column(name = "output_text", nullable = false)
+    @Column(name = "output", nullable = false)
     private String output;
 
     @Column(name = "reflector_id", nullable = false)
@@ -30,6 +30,8 @@ public class ReflectorEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "machine_id", nullable = false)
     private MachineEntity machine;
+
+
 
 
     public ReflectorEntity() {
