@@ -23,7 +23,6 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import repository.Repository;
-import repository.XMLRepository;
 
 
 @Component
@@ -90,7 +89,6 @@ public class LoadManager {
 
 
         String machineName = bteMachine.getName();
-        XMLRepository.addRepository(machineName, repository);
        // isMachineLoaded = true;
         //return new LoadMachineResult(machineName);
         return  repository;

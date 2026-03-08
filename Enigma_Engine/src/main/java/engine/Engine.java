@@ -9,7 +9,7 @@ public interface Engine {
 
     DtoMachineSpecification showMachineDetails();
 
-    String processMessage(String message);
+    ProcessRecord processMessage(String message);
 
     void codeManual(String line, String initialRotorsPositions, int reflectorId, String plugboardInput);
 

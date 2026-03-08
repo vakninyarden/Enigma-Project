@@ -3,8 +3,8 @@ package patmal.course.enigma.session.service;
 import engine.Engine;
 import engine.EngineImpl;
 import org.springframework.stereotype.Service;
+import patmal.course.enigma.PersistanceService;
 import repository.Repository;
-import repository.XMLRepository;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -14,13 +14,18 @@ public class SessionManager {
     // sessionId to machine name mapping
     // dont need to be static map beacuse this is singelton
     private  Map<String, Engine> enginesBySession  = new ConcurrentHashMap<>();
-
     private   Map<String, String> machineNameBySession  = new ConcurrentHashMap<>();
+    private final PersistanceService persistanceService;
+
+    public SessionManager(PersistanceService persistanceService) {
+        this.persistanceService = persistanceService;
+    }
+
 
 
 
     public String createSession(String machineName) {
-            Repository repository = XMLRepository.getRepository(machineName);
+            Repository repository = persistanceService.getRepositoryFromDb(machineName);
 // *********maybe need a deep copy*********
            //Repository repoForSession = repository.deepCopy();
            Engine engine = new EngineImpl(repository);

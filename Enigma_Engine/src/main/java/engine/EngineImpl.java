@@ -197,7 +197,11 @@ public class EngineImpl implements Engine {
 
 
     @Override
-    public String processMessage(String message) {
+    public ProcessRecord processMessage(String message) {
+        StringBuilder currentCode = new StringBuilder();
+        Setting code = machine.getSetting();
+        BuildCurrentCode(currentCode, code);
+
         message = message.toUpperCase();
         orderOperationValidator.validateMachineLoaded(isMachineLoaded);
         orderOperationValidator.validateCodeSet(isCodeSet);
@@ -211,15 +215,18 @@ public class EngineImpl implements Engine {
         }
         long endTime = System.nanoTime();
         long totalTime = endTime - startTime;
-        updateStatistic(message, result, totalTime);
+       // updateStatistic(message, result, totalTime);
+        String machineName = repository.getMachineName();
 
-        return new String(result);
+
+        return new ProcessRecord(message, new String(result), totalTime, currentCode.toString(), machineName);
+       // return new String(result);
     }
 
-    private void updateStatistic(String message, char[] result, long totalTime) {
+ /*   private void updateStatistic(String message, char[] result, long totalTime) {
         ProcessRecord processRecord = new ProcessRecord(message, new String(result), totalTime);
         statisticsManager.addStatistic(processRecord);
-    }
+    }*/
 
     @Override
     public void codeManual(String line, String initialRotorsPositions, int reflectorId, String plugboardInput) {

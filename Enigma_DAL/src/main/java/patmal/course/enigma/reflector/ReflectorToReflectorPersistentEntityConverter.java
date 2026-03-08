@@ -25,8 +25,10 @@ public class ReflectorToReflectorPersistentEntityConverter {
                 .forEach(entry -> {
                     if (keys) {
                         sb.append(entry.getKey());
+                        sb.append(',');
                     } else {
                         sb.append(entry.getValue());
+                        sb.append(',');
                     }
                 });
 

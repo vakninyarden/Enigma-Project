@@ -60,4 +60,5 @@ public class MachineEntity {
         reflector.setMachine(this);
         this.reflectors.add(reflector);
     }
+
 }

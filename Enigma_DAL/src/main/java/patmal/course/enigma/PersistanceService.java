@@ -1,20 +1,25 @@
 package patmal.course.enigma;
 
 
+import dto.ProcessRecord;
 import enigma.machine.component.reflector.Reflector;
 import enigma.machine.component.rotor.Rotor;
 import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Service;
 import patmal.course.enigma.machine.MachineEntity;
 import patmal.course.enigma.machine.MachineRepository;
+import patmal.course.enigma.processing.ProcessingEntity;
 import patmal.course.enigma.processing.ProcessingRepository;
 import patmal.course.enigma.reflector.ReflectorEntity;
+import patmal.course.enigma.reflector.ReflectorEntityToReflectorConverter;
 import patmal.course.enigma.reflector.ReflectorToReflectorPersistentEntityConverter;
 import patmal.course.enigma.rotor.RotorEntity;
+import patmal.course.enigma.rotor.RotorEntityToRotorConverter;
 import patmal.course.enigma.rotor.RotorRepository;
 import patmal.course.enigma.rotor.RotorToRotorPersistentEntityConverter;
 import repository.Repository;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -59,6 +64,75 @@ public class PersistanceService {
         }
         machineRepository.save(machineEntity);
     }
+
+    public Repository getRepositoryFromDb(String machineName) {
+
+            Map<Integer, Rotor> rotors = new HashMap<>();
+            Map<String, Reflector> reflectors = new HashMap<>();
+
+            MachineEntity machineEntity = getMachineByName(machineName);
+
+            for (RotorEntity rotorEntity : machineEntity.getRotors()) {
+
+                Rotor rotor =
+                        RotorEntityToRotorConverter.convert(rotorEntity);
+
+                rotors.put(rotor.getRotorId(), rotor);
+            }
+
+            for (ReflectorEntity reflectorEntity : machineEntity.getReflectors()) {
+
+                Reflector reflector =
+                        ReflectorEntityToReflectorConverter.convert(reflectorEntity);
+
+                reflectors.put(reflector.getReflectorId(), reflector);
+            }
+
+            return new Repository(
+                    machineEntity.getAbc(),
+                    rotors,
+                    reflectors,
+                    machineEntity.getRotorsCount(),
+                    machineEntity.getName()
+            );
+
+    }
+
+    public MachineEntity getMachineByName(String machineName) {
+        return machineRepository.findByName(machineName)
+                .orElseThrow(() -> new RuntimeException("Machine not found: " + machineName));
+    }
+
+    public void saveProcessingRecordToDb(ProcessRecord record,String sessionId) {
+        MachineEntity machineEntity = getMachineByName(record.getMachineName());
+
+     /*   ProcessingEntity processingEntity =
+                ProcessingEntity.builder()
+                        .id(UUID.randomUUID())
+                        .sessionId(sessionId)
+                        .code(record.currentCode)
+                        .inputText(record.getSorceMessage())
+                        .outputText(record.getProcessedMessage())
+                        .timeNs(record.getTimeInNanos())
+                        .machine(machineEntity)
+                        .build();
+*/
+
+        ProcessingEntity processingEntity = new ProcessingEntity();
+        processingEntity.setId(UUID.randomUUID());
+        processingEntity.setSessionId(sessionId);
+        processingEntity.setCode(record.getCurrentCode());
+        processingEntity.setInputText(record.getSorceMessage());
+        processingEntity.setOutputText(record.getProcessedMessage());
+        processingEntity.setTimeNs(record.getTimeInNanos());
+        processingEntity.setMachine(machineEntity);
+
+        processingRepository.save(processingEntity);
+    }
+
+
+
+
 
 
 }
