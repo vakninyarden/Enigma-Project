@@ -63,10 +63,14 @@ public class MachineDetailsResponseToWebConverter {
             MachineSnapshot snapshot,
             boolean useOriginalPosition) {
 
+        List<RotorSnapshot> rotors = snapshot.getRotors() != null ? snapshot.getRotors() : Collections.emptyList();
+        Map<Character,Character> plugs = snapshot.getPlugboard() != null ? snapshot.getPlugboard() : Collections.emptyMap();
+
+
         return new EnigmaCodeStructure()
-                .rotors(buildRotors(snapshot.getRotors(), useOriginalPosition))
+                .rotors(buildRotors(rotors, useOriginalPosition))
                 .reflector(snapshot.getReflectorId())
-                .plugs(buildPlugs(snapshot.getPlugboard()));
+                .plugs(buildPlugs(plugs));
     }
 
     private List<RotorSelectionWithNotch> buildRotors(

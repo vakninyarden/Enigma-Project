@@ -20,15 +20,21 @@ public class ProcessService {
     }
 
 
-    public ProcessInputResult processInput(String sessionId,String input) {
+    public ProcessInputResult processInput(String sessionId, String input) {
         Engine engine = sessionManager.getEngineBySessionId(sessionId);
-        ProcessRecord pr = engine.processMessage(input);
 
-        persistanceService.saveProcessingRecordToDb(pr,sessionId);
+        try {
+            ProcessRecord pr = engine.processMessage(input);
 
-        String RotorState = engine.getCurrentRotorPositions();
 
-        return new ProcessInputResult(pr.getProcessedMessage(), RotorState);
+            persistanceService.saveProcessingRecordToDb(pr, sessionId);
+
+            String RotorState = engine.getCurrentRotorPositions();
+
+            return new ProcessInputResult(pr.getProcessedMessage(), RotorState);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 }
 

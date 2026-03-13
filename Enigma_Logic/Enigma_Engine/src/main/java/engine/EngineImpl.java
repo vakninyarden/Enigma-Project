@@ -18,36 +18,23 @@ import repository.Repository;
 import validator.InputValidator;
 import validator.OrderOperationValidator;
 import enigma.machine.component.machine.EnigmaMachine;
-
-// Spring annotations and imports for dependency injection and service declaration
-
-
 import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
 
 
-///  testing commit
 
 public class EngineImpl implements Engine {
     private final InputValidator inputValidator;
-    boolean isCodeSet = true;
-    boolean isMachineLoaded = true;
+    boolean isCodeSet = false;
     private final OrderOperationValidator orderOperationValidator;
-    //private  String MachineName;
-    // private static int messageCount = 0;
 
-    // remove static beacuse we gonna have multiple instances of the engine and we want each instance to have its own message count
-    // note that EngineImpl is singleton so his one and only instance will hold the count correct
     private  int messageCount = 0;
     private EnigmaMachine machine;
     private StatisticsManager statisticsManager;
     private Repository repository;
 
-   /* public EngineImpl() {
-        statisticsManager = new StatisticsManager();
-    }*/
 
     public EngineImpl(Repository repository) {
         this.repository = repository;
@@ -61,7 +48,6 @@ public class EngineImpl implements Engine {
 
     @Override
     public DtoMachineSpecification showMachineDetails() {
-        orderOperationValidator.validateMachineLoaded(isMachineLoaded);
         if (!isCodeSet) {
             DtoMachineSpecification dtoMachineSpecification = new DtoMachineSpecification(repository.getRotorCount(),
                     repository.getReflectorCount(),
@@ -96,25 +82,7 @@ public class EngineImpl implements Engine {
 
     }
 
-    /*private void BuildCurrentCode(StringBuilder currentSbString, Setting machineOrinialCode) {
 
-        currentSbString.append('<');
-        List<Setting.RotorPosition> activeRotors = machineOrinialCode.getActiveRotors();
-        for (int i = 0; i < activeRotors.size(); i++) {
-            Rotor rotor = activeRotors.get(i).getRotor();
-            int currentPosition = activeRotors.get(i).getRotor().getCurrentPosition();
-            currentSbString.append(repository.getRotor(activeRotors.get(i).getRotor().getRotorId()).getRightMapping().get(currentPosition));
-            currentSbString.append('(');
-            int abcLength = repository.getAbc().length();
-            int DistanceFromNotch = (activeRotors.get(i).getRotor().getNotchIndex() - currentPosition + abcLength) % abcLength;
-            currentSbString.append(DistanceFromNotch);
-            currentSbString.append(')');
-            if (i != activeRotors.size() - 1) {
-                currentSbString.append(',');
-            }
-        }
-        currentSbString.append('>');
-    }*/
      private void BuildCurrentCode(StringBuilder currentSbString, Setting machineOrinialCode) {
 
         currentSbString.append('<');
@@ -169,22 +137,6 @@ public class EngineImpl implements Engine {
         sb.append('>');
 
     }
-    /*private void BuildOrignialCode(Setting machineOrinialCode, StringBuilder sb) {
-        sb.append('<');
-        for (int i = 0; i < machineOrinialCode.getActiveRotors().size(); i++) {
-            int orinigalPosition = machineOrinialCode.getActiveRotors().get(i).getRotor().getOriginalPosition();
-            sb.append(repository.getRotor(machineOrinialCode.getActiveRotors().get(i).getRotor().getRotorId()).getRightMapping().get(orinigalPosition));
-            sb.append('(');
-            int DistanceFromNotch = (machineOrinialCode.getActiveRotors().get(i).getRotor().getNotchIndex() - orinigalPosition + repository.getAbc().length()) % repository.getAbc().length();
-            sb.append(DistanceFromNotch);
-            sb.append(')');
-            if (i != machineOrinialCode.getActiveRotors().size() - 1) {
-                sb.append(',');
-            }
-        }
-        sb.append('>');
-
-    }*/
 
     private static void BuildRotorsIdString(Setting machineOrinialCode, StringBuilder sb) {
         sb.append('<');
@@ -201,13 +153,12 @@ public class EngineImpl implements Engine {
 
     @Override
     public ProcessRecord processMessage(String message) {
+        orderOperationValidator.validateCodeSet(isCodeSet);
         StringBuilder currentCode = new StringBuilder();
         Setting code = machine.getSetting();
         BuildCurrentCode(currentCode, code);
 
         message = message.toUpperCase();
-        orderOperationValidator.validateMachineLoaded(isMachineLoaded);
-        orderOperationValidator.validateCodeSet(isCodeSet);
         InputValidator.validateMessageInput(message, repository.getAbc());
         long startTime = System.nanoTime();
         messageCount++;
@@ -226,16 +177,11 @@ public class EngineImpl implements Engine {
        // return new String(result);
     }
 
- /*   private void updateStatistic(String message, char[] result, long totalTime) {
-        ProcessRecord processRecord = new ProcessRecord(message, new String(result), totalTime);
-        statisticsManager.addStatistic(processRecord);
-    }*/
 
     @Override
     public void codeManual(String line, String initialRotorsPositions, int reflectorId, String plugboardInput) {
         initialRotorsPositions = initialRotorsPositions.toUpperCase();
         plugboardInput = plugboardInput.toUpperCase();
-        orderOperationValidator.validateMachineLoaded(isMachineLoaded);
         //InputValidator inputValidator = new InputValidator();
         inputValidator.validateRotorIds(line, repository.getNumberOfRotors());
         List<Integer> rotorIds = Arrays.stream(line.split(","))
@@ -279,7 +225,6 @@ public class EngineImpl implements Engine {
 
     @Override
     public String codeAuto() {
-        orderOperationValidator.validateMachineLoaded(isMachineLoaded);
         Random rand = new Random();
         String initialRotorsPositions = "";
         int numberOfReflectors = repository.getReflectorCount();
@@ -323,14 +268,12 @@ public class EngineImpl implements Engine {
 
     @Override
     public void resetCode() {
-        orderOperationValidator.validateMachineLoaded(isMachineLoaded);
         orderOperationValidator.validateCodeSet(isCodeSet);
         machine.resetMachine();
     }
 
     @Override
     public DtoStatistic statistics() {
-        orderOperationValidator.validateMachineLoaded(isMachineLoaded);
         DtoStatistic dtoStatistic = new DtoStatistic(statisticsManager.getStatisticsData());
         return dtoStatistic;
     }
@@ -439,6 +382,21 @@ public class EngineImpl implements Engine {
 
     @Override
     public MachineSnapshot getMachineSnapshot() {
+        if(!isCodeSet){
+            MachineSnapshot snapshot = MachineSnapshot.builder()
+                    .totalRotors(repository.getRotorCount())
+                    .totalReflectors(repository.getReflectorCount())
+                    .totalProcessedMessages(messageCount)
+                    .build();
+            return  snapshot;
+        }
+
+       /* if (!isCodeSet) {
+            MachineSnapshot snap = new MachineSnapshot(repository.getRotorCount(),
+                    repository.getReflectorCount(),
+                    0);
+            return snap;
+        }*/
         Setting setting=machine.getSetting();
         List<RotorSnapshot> rotorSnapshots = new ArrayList<>();
         for(Setting.RotorPosition rotorPosition : setting.getActiveRotors()){
