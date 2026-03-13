@@ -20,6 +20,7 @@ import patmal.course.enigma.rotor.RotorToRotorPersistentEntityConverter;
 import repository.Repository;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -129,6 +130,39 @@ public class PersistanceService {
 
         processingRepository.save(processingEntity);
     }
+
+    public List<ProcessRecord> getHistoryBySessionId(String sessionId) {
+        return processingRepository.findBySessionId(sessionId)
+                .orElseThrow(() -> new RuntimeException("No records found for session ID: " + sessionId))
+                .stream()
+                .map(entity -> new ProcessRecord(
+                        entity.getInputText(),
+                        entity.getOutputText(),
+                        entity.getTimeNs(),
+                        entity.getCode(),
+                        entity.getMachine().getName()
+                ))
+                .toList();
+
+    }
+
+    public List<ProcessRecord> getHistoryByMachineName(String machineName) {
+        MachineEntity machineEntity = getMachineByName(machineName);
+        return processingRepository.findAll()
+                .stream()
+                .filter(entity -> entity.getMachine().getId().equals(machineEntity.getId()))
+                .map(entity -> new ProcessRecord(
+                        entity.getInputText(),
+                        entity.getOutputText(),
+                        entity.getTimeNs(),
+                        entity.getCode(),
+                        entity.getMachine().getName()
+                ))
+                .toList();
+    }
+
+
+
 
 
 
