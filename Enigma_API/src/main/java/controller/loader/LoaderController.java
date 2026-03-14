@@ -1,7 +1,7 @@
 package controller.loader;
+
 import dto.load.LoadMachineCommand;
 import dto.load.LoadMachineResult;
-import patmal.course.enigma.LoadManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

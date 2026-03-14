@@ -27,11 +27,3 @@ public class RotorToRotorPersistentEntityConverter {
 
 
 
-/*
-
-private final int id;
-private final int notchPosition;
-private int currentPosition;
-private int originalPosition;
-private final List<Character> rightMapping;
-private final List<Character> leftMapping;*/

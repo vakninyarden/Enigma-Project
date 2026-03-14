@@ -1,4 +1,5 @@
 package dto.load;
+
 import lombok.Data;
 
 import java.io.InputStream;

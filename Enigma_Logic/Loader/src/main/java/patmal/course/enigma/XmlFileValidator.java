@@ -9,7 +9,6 @@ import java.math.BigInteger;
 import java.util.*;
 
 
-// need to be component to be able to autowire to the engine imple instead of creating new instance of it in the engine impl
 @Component
 public class XmlFileValidator implements FileValidator {
 
@@ -181,8 +180,8 @@ public class XmlFileValidator implements FileValidator {
         }
     }
 
-    private void validateNumberOfActiveRotors(BigInteger activeRotorsCount, int totalRotorsCount ) {
-        if(activeRotorsCount.compareTo(BigInteger.valueOf(99)) > 0) {
+    private void validateNumberOfActiveRotors(BigInteger activeRotorsCount, int totalRotorsCount) {
+        if (activeRotorsCount.compareTo(BigInteger.valueOf(99)) > 0) {
             throw new RotorCountOutOfRangeException(activeRotorsCount.toString() + " active rotors is more than the max of 99.");
         }
 
@@ -191,9 +190,6 @@ public class XmlFileValidator implements FileValidator {
         }
 
     }
-
-
-
 
     public void ValidateAll(BTEEnigma bteEnigma) {
         isAbcSizeEven(bteEnigma.getABC());
@@ -206,8 +202,4 @@ public class XmlFileValidator implements FileValidator {
         validateNumberOfActiveRotors(bteEnigma.getRotorsCount(), bteEnigma.getBTERotors().getBTERotor().size());
     }
 
-    public void ValidateFilePath(String filePath) {
-        validateIsXmlFile(filePath);
-        isFileExists(filePath);
-    }
 }

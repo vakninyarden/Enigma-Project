@@ -1,4 +1,5 @@
 package controller.process;
+
 import dto.process.ProcessInputResult;
 import org.springframework.stereotype.Component;
 import patmal.course.enigma.api.model.ProcessInput200Response;

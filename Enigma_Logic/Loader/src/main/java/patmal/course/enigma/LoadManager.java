@@ -2,7 +2,6 @@ package patmal.course.enigma;
 
 import bte.component.jaxb.*;
 import dto.load.LoadMachineCommand;
-import dto.load.LoadMachineResult;
 import enigma.machine.component.reflector.Reflector;
 import enigma.machine.component.reflector.ReflectorImpl;
 import enigma.machine.component.rotor.Rotor;
@@ -21,17 +20,15 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import repository.Repository;
 
 
 @Component
 public class LoadManager {
-    private XmlFileValidator xmlValidator= new XmlFileValidator();
+    private XmlFileValidator xmlValidator = new XmlFileValidator();
 
 
-
-    public  BTEEnigma loadXmlToObject(String xmlNameFile) {
+    public BTEEnigma loadXmlToObject(String xmlNameFile) {
         try {
             InputStream inputStream = new FileInputStream(new File(xmlNameFile));
             BTEEnigma machine = deserializeFrom(inputStream);
@@ -44,8 +41,6 @@ public class LoadManager {
     }
 
 
-    // THIS FUCNTION ALLOWS TO THE WEB SERVER TO LOAD FILES FROM THE BROWSER
-    // מתודה חדשה וקריטית למטלה 3 (תשמש את ה-Controller)
     public BTEEnigma loadXmlFromStream(InputStream inputStream) {
         try {
             BTEEnigma machine = deserializeFrom(inputStream);
@@ -56,13 +51,13 @@ public class LoadManager {
         }
     }
 
-    private  BTEEnigma deserializeFrom(InputStream in) throws JAXBException {
+    private BTEEnigma deserializeFrom(InputStream in) throws JAXBException {
         JAXBContext jc = JAXBContext.newInstance(BTEEnigma.class);
         Unmarshaller u = jc.createUnmarshaller();
         return (BTEEnigma) u.unmarshal(in);
     }
 
-    private  void cleanMachine(BTEEnigma machine) {
+    private void cleanMachine(BTEEnigma machine) {
         if (machine == null) {
             return;
         }
@@ -75,35 +70,22 @@ public class LoadManager {
     }
 
     public Repository loadXml(LoadMachineCommand command) {
-        InputStream inputStream=command.getInputStream();
+        InputStream inputStream = command.getInputStream();
         BTEEnigma bteMachine = loadXmlFromStream(inputStream);
-
         xmlValidator.ValidateAll(bteMachine);
-       int numberofRotors = bteMachine.getRotorsCount().intValue();
-       // NUMBER_OF_ROTORS = bteMachine.getRotorsCount().intValue();
-        //Repository repository = new Repository(bteMachine.getABC(), bteMachine, numberofRotors);
-        Repository repository= buildRepo(bteMachine);
-       // this.messageCount = 0;
-        // statisticsManager.resetStatistics();
-       // persistanceService.saveXmlToDb(repository, bteMachine.getName());
-
-
-        String machineName = bteMachine.getName();
-       // isMachineLoaded = true;
-        //return new LoadMachineResult(machineName);
-        return  repository;
+        Repository repository = buildRepo(bteMachine);
+        return repository;
     }
 
 
-
-    private Repository buildRepo(BTEEnigma bteEnigma){
+    private Repository buildRepo(BTEEnigma bteEnigma) {
 
         Map<Integer, Rotor> rotors;
         Map<String, Reflector> reflectors;
 
-        rotors = buildRotorsRepository(bteEnigma.getBTERotors(),bteEnigma.getABC());
-        reflectors= buildReflectorsRepository(bteEnigma.getBTEReflectors());
-        return new Repository(bteEnigma.getABC(),rotors,reflectors,bteEnigma.getRotorsCount().intValue(),bteEnigma.getName());
+        rotors = buildRotorsRepository(bteEnigma.getBTERotors(), bteEnigma.getABC());
+        reflectors = buildReflectorsRepository(bteEnigma.getBTEReflectors());
+        return new Repository(bteEnigma.getABC(), rotors, reflectors, bteEnigma.getRotorsCount().intValue(), bteEnigma.getName());
 
     }
 

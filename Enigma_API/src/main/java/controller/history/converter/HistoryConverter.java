@@ -5,7 +5,6 @@ import dto.ProcessRecord;
 import org.springframework.stereotype.Component;
 import patmal.course.enigma.api.model.HistoryEntry;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -17,7 +16,7 @@ public class HistoryConverter {
         return new HistoryEntry(
                 record.getSorceMessage(),
                 record.getProcessedMessage(),
-                (int)record.getTimeInNanos()
+                (int) record.getTimeInNanos()
         );
     }
 

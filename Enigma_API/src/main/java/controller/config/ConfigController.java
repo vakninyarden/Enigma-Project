@@ -15,12 +15,9 @@ import patmal.course.enigma.api.model.GetCurrentMachineStatus200Response; // mai
 @RestController
 @RequestMapping("/enigma/config")
 public class ConfigController {
-    //private SessionManager sessionManager;
     private final ConfigurationService configurationService;
     private final WebToManualConfigurationRequestConverter manualConverter;
     private final MachineDetailsResponseToWebConverter detailsConverter;
-
-
 
 
     @GetMapping
@@ -54,12 +51,11 @@ public class ConfigController {
     }
 
 
-
-   @PutMapping("/automatic")
+    @PutMapping("/automatic")
     public ResponseEntity<String>
     setAutomaticCodeSetup(@RequestParam("sessionID") String sessionID) {
         try {
-             String generatedCode=configurationService.CodeAutoService(sessionID);
+            String generatedCode = configurationService.CodeAutoService(sessionID);
             return ResponseEntity.ok(generatedCode);
 
         } catch (Exception e) {
@@ -71,7 +67,7 @@ public class ConfigController {
     public ResponseEntity<String>
     resetToOriginalCode(@RequestParam("sessionID") String sessionID) {
         try {
-            DtoMachineSpecification spec=configurationService.ResetCodeService(sessionID);
+            DtoMachineSpecification spec = configurationService.ResetCodeService(sessionID);
             return ResponseEntity.ok(spec.getOriginalCode());
 
         } catch (Exception e) {

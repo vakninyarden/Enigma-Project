@@ -34,8 +34,7 @@ public class HistoryService {
         }
         return history;
     }
-
-    }
+}
 
 
 

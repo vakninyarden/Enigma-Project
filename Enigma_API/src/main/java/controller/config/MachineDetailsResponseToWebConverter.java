@@ -24,16 +24,16 @@ public class MachineDetailsResponseToWebConverter {
     }
 
 
-   public GetCurrentMachineStatus200ResponseOneOf1 convertCompact(
-           MachineSnapshot snapshot) {
+    public GetCurrentMachineStatus200ResponseOneOf1 convertCompact(
+            MachineSnapshot snapshot) {
 
-       return new GetCurrentMachineStatus200ResponseOneOf1()
-               .totalRotors(snapshot.getTotalRotors())
-               .totalReflectors(snapshot.getTotalReflectors())
-               .totalProcessedMessages(snapshot.getTotalProcessedMessages())
-               .originalCodeCompact(snapshot.getOriginalCodeCompact())
-               .currentRotorsPositionCompact(snapshot.getCurrentCodeCompact());
-   }
+        return new GetCurrentMachineStatus200ResponseOneOf1()
+                .totalRotors(snapshot.getTotalRotors())
+                .totalReflectors(snapshot.getTotalReflectors())
+                .totalProcessedMessages(snapshot.getTotalProcessedMessages())
+                .originalCodeCompact(snapshot.getOriginalCodeCompact())
+                .currentRotorsPositionCompact(snapshot.getCurrentCodeCompact());
+    }
 
     public GetCurrentMachineStatus200ResponseOneOf convertVerbose(MachineSnapshot snapshot) {
         EnigmaCodeStructure original =
@@ -54,17 +54,12 @@ public class MachineDetailsResponseToWebConverter {
     }
 
 
-
-     /* ===============================
-       PRIVATE HELPERS
-       =============================== */
-
     private EnigmaCodeStructure buildCodeStructure(
             MachineSnapshot snapshot,
             boolean useOriginalPosition) {
 
         List<RotorSnapshot> rotors = snapshot.getRotors() != null ? snapshot.getRotors() : Collections.emptyList();
-        Map<Character,Character> plugs = snapshot.getPlugboard() != null ? snapshot.getPlugboard() : Collections.emptyMap();
+        Map<Character, Character> plugs = snapshot.getPlugboard() != null ? snapshot.getPlugboard() : Collections.emptyMap();
 
 
         return new EnigmaCodeStructure()
@@ -137,4 +132,4 @@ public class MachineDetailsResponseToWebConverter {
         return plugs;
     }
 
-    }
+}

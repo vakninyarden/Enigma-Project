@@ -11,34 +11,16 @@ import java.util.Map;
 @Builder
 public class MachineSnapshot {
 
-     int  totalRotors;
-     int   totalReflectors;
-     int  totalProcessedMessages;
+    int totalRotors;
+    int totalReflectors;
+    int totalProcessedMessages;
 
     String originalCodeCompact;
     String currentCodeCompact;
 
     List<RotorSnapshot> rotors;
     String reflectorId;
-    Map<Character,Character> plugboard;
+    Map<Character, Character> plugboard;
 
-  /*  public MachineSnapshot(int totalRotors, int totalReflectors, int totalProcessedMessages) {
-        this.totalRotors = totalRotors;
-        this.totalReflectors = totalReflectors;
-        this.totalProcessedMessages = totalProcessedMessages;
-    }*/
-/*
-
-    public MachineSnapshot(int totalRotors, int totalReflectors, int totalProcessedMessages, String originalCodeCompact, String currentCodeCompact, List<RotorSnapshot> rotors,String reflectorId, Map<Character,Character> plugboard) {
-        this.totalRotors = totalRotors;
-        this.totalReflectors = totalReflectors;
-        this.totalProcessedMessages = totalProcessedMessages;
-        this.originalCodeCompact = originalCodeCompact;
-        this.currentCodeCompact = currentCodeCompact;
-        this.rotors = rotors;
-        this.reflectorId = reflectorId;
-        this.plugboard = plugboard;
-    }
-*/
 
 }

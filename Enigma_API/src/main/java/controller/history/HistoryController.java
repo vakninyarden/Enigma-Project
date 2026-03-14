@@ -13,7 +13,6 @@ import patmal.course.enigma.api.model.GetMachineHistory400Response;
 import patmal.course.enigma.api.model.HistoryEntry;
 import patmal.course.enigma.service.HistoryService;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +27,7 @@ public class HistoryController {
     @GetMapping
     public ResponseEntity<?> getHistory(
             @RequestParam(value = "sessionID", required = false) String sessionID,
-            @RequestParam(value= "machineName", required = false) String machineName) {
+            @RequestParam(value = "machineName", required = false) String machineName) {
         Map<String, List<ProcessRecord>> history;
 
         if ((sessionID == "" && machineName == "") || (sessionID != "" && machineName != "")) {
@@ -38,16 +37,14 @@ public class HistoryController {
             );
         }
 
-            if (sessionID != "") {
-                history = historyService.getHistoryBySessionId(sessionID);
+        if (sessionID != "") {
+            history = historyService.getHistoryBySessionId(sessionID);
 
-            } else {
-                history = historyService.getHistoryByMachineName(machineName);
-            }
-            return ResponseEntity.ok(historyConverter.convertToHistoryEntryMap(history));
+        } else {
+            history = historyService.getHistoryByMachineName(machineName);
         }
-
-
+        return ResponseEntity.ok(historyConverter.convertToHistoryEntryMap(history));
+    }
 
 
 }

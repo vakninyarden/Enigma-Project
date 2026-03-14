@@ -19,16 +19,13 @@ public class ProcessService {
         this.persistanceService = persistanceService;
     }
 
-
     public ProcessInputResult processInput(String sessionId, String input) {
         Engine engine = sessionManager.getEngineBySessionId(sessionId);
 
         try {
             ProcessRecord pr = engine.processMessage(input);
 
-
             persistanceService.saveProcessingRecordToDb(pr, sessionId);
-
             String RotorState = engine.getCurrentRotorPositions();
 
             return new ProcessInputResult(pr.getProcessedMessage(), RotorState);

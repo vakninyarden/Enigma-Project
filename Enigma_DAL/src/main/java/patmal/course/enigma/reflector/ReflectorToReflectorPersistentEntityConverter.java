@@ -37,6 +37,3 @@ public class ReflectorToReflectorPersistentEntityConverter {
 }
 
 
-/*
-private final String reflectorId;
-private final Map<Integer, Integer> mapping;*/

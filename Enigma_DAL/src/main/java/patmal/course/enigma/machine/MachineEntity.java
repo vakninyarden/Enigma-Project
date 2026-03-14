@@ -43,6 +43,7 @@ public class MachineEntity {
     public MachineEntity() {
         this.id = UUID.randomUUID();
     }
+
     public MachineEntity(String name, int rotorsCount, String abc) {
         this();
         this.name = name;

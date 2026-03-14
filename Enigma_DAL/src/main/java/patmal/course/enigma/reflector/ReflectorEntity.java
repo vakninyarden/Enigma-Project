@@ -32,8 +32,6 @@ public class ReflectorEntity {
     private MachineEntity machine;
 
 
-
-
     public ReflectorEntity() {
         this.id = UUID.randomUUID();
     }

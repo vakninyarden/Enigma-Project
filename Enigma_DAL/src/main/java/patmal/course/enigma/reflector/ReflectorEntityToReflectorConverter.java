@@ -22,6 +22,7 @@ public class ReflectorEntityToReflectorConverter {
                 mapping
         );
     }
+
     private static Map<Integer, Integer> buildMapping(String input, String output) {
 
         Map<Integer, Integer> mapping = new HashMap<>();

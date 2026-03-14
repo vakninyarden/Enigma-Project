@@ -15,7 +15,6 @@ import patmal.course.enigma.reflector.ReflectorEntityToReflectorConverter;
 import patmal.course.enigma.reflector.ReflectorToReflectorPersistentEntityConverter;
 import patmal.course.enigma.rotor.RotorEntity;
 import patmal.course.enigma.rotor.RotorEntityToRotorConverter;
-import patmal.course.enigma.rotor.RotorRepository;
 import patmal.course.enigma.rotor.RotorToRotorPersistentEntityConverter;
 import repository.Repository;
 
@@ -68,34 +67,34 @@ public class PersistanceService {
 
     public Repository getRepositoryFromDb(String machineName) {
 
-            Map<Integer, Rotor> rotors = new HashMap<>();
-            Map<String, Reflector> reflectors = new HashMap<>();
+        Map<Integer, Rotor> rotors = new HashMap<>();
+        Map<String, Reflector> reflectors = new HashMap<>();
 
-            MachineEntity machineEntity = getMachineByName(machineName);
+        MachineEntity machineEntity = getMachineByName(machineName);
 
-            for (RotorEntity rotorEntity : machineEntity.getRotors()) {
+        for (RotorEntity rotorEntity : machineEntity.getRotors()) {
 
-                Rotor rotor =
-                        RotorEntityToRotorConverter.convert(rotorEntity);
+            Rotor rotor =
+                    RotorEntityToRotorConverter.convert(rotorEntity);
 
-                rotors.put(rotor.getRotorId(), rotor);
-            }
+            rotors.put(rotor.getRotorId(), rotor);
+        }
 
-            for (ReflectorEntity reflectorEntity : machineEntity.getReflectors()) {
+        for (ReflectorEntity reflectorEntity : machineEntity.getReflectors()) {
 
-                Reflector reflector =
-                        ReflectorEntityToReflectorConverter.convert(reflectorEntity);
+            Reflector reflector =
+                    ReflectorEntityToReflectorConverter.convert(reflectorEntity);
 
-                reflectors.put(reflector.getReflectorId(), reflector);
-            }
+            reflectors.put(reflector.getReflectorId(), reflector);
+        }
 
-            return new Repository(
-                    machineEntity.getAbc(),
-                    rotors,
-                    reflectors,
-                    machineEntity.getRotorsCount(),
-                    machineEntity.getName()
-            );
+        return new Repository(
+                machineEntity.getAbc(),
+                rotors,
+                reflectors,
+                machineEntity.getRotorsCount(),
+                machineEntity.getName()
+        );
 
     }
 
@@ -104,7 +103,7 @@ public class PersistanceService {
                 .orElseThrow(() -> new RuntimeException("Machine not found: " + machineName));
     }
 
-    public void saveProcessingRecordToDb(ProcessRecord record,String sessionId) {
+    public void saveProcessingRecordToDb(ProcessRecord record, String sessionId) {
         MachineEntity machineEntity = getMachineByName(record.getMachineName());
 
      /*   ProcessingEntity processingEntity =
@@ -160,13 +159,6 @@ public class PersistanceService {
                 ))
                 .toList();
     }
-
-
-
-
-
-
-
 
 
 }

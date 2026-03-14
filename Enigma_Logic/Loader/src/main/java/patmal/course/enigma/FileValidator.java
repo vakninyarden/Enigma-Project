@@ -10,7 +10,6 @@ import java.util.List;
 public interface FileValidator {
     boolean isFileExists(String filePath);
 
-
     boolean isAbcSizeEven(String abc);
 
     boolean hasAtLeastThreeRotors(List<BTERotor> rotors);

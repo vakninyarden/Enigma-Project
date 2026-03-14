@@ -1,9 +1,10 @@
 package patmal.course.enigma.rotor;
+
 import jakarta.persistence.*;
 import lombok.*;
 import patmal.course.enigma.machine.MachineEntity;
-
 import java.util.UUID;
+
 @Entity
 @Table(name = "machines_rotors")
 @Getter

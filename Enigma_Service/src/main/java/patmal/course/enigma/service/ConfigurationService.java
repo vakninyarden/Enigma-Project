@@ -9,7 +9,6 @@ import patmal.course.enigma.session.service.SessionManager;
 
 @Service
 public class ConfigurationService {
-    // private Engine engine;
     private final SessionManager sessionManager;
 
     public ConfigurationService(SessionManager sessionManager) {
@@ -21,18 +20,14 @@ public class ConfigurationService {
         Engine engine = sessionManager.getEngineBySessionId(sessionId);
         return engine.showMachineDetails();
     }
- /*   public String getRotorsPos(String sessionId) {
-        Engine engine = sessionManager.getEngineBySessionId(sessionId);
-        return engine.getCurrentRotorPositions();
-    }*/
+
 
     public MachineSnapshot getSnapshot(String sessionId) {
         Engine engine = sessionManager.getEngineBySessionId(sessionId);
         return engine.getMachineSnapshot();
     }
 
-    public void CodeManualService(String sessionId, ManualConfigurationModel model)
-    {
+    public void CodeManualService(String sessionId, ManualConfigurationModel model) {
         Engine engine = sessionManager.getEngineBySessionId(sessionId);
         engine.codeManual(
                 model.getLine(),
@@ -41,13 +36,13 @@ public class ConfigurationService {
                 model.getPlugboardInput()
         );
     }
-    public String CodeAutoService(String sessionId)
-    {
+
+    public String CodeAutoService(String sessionId) {
         Engine engine = sessionManager.getEngineBySessionId(sessionId);
         return engine.codeAuto();
     }
-    public DtoMachineSpecification ResetCodeService(String sessionId)
-    {
+
+    public DtoMachineSpecification ResetCodeService(String sessionId) {
         Engine engine = sessionManager.getEngineBySessionId(sessionId);
         engine.resetCode();
         return engine.showMachineDetails();

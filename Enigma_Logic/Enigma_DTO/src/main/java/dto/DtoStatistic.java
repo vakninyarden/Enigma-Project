@@ -1,6 +1,5 @@
 package dto;
 
-//import engine.statistic.ProcessRecord;
 
 import lombok.Data;
 
@@ -15,8 +14,5 @@ public class DtoStatistic {
         this.statisticsData = statisticsData;
     }
 
-    public Map<String, List<ProcessRecord>> getStatisticsData() {
-        return statisticsData;
-    }
 }
 

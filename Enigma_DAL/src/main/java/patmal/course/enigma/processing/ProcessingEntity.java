@@ -1,4 +1,5 @@
 package patmal.course.enigma.processing;
+
 import jakarta.persistence.*;
 import lombok.*;
 import patmal.course.enigma.machine.MachineEntity;
@@ -22,7 +23,6 @@ public class ProcessingEntity {
     private String sessionId;
 
 
-    //the code that the input encrpyted/decrypted with
     @Column(name = "code", nullable = false, length = 4000)
     private String code;
 
