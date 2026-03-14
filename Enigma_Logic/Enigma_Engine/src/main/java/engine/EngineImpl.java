@@ -1,9 +1,9 @@
 package engine;
 
 import dto.DtoMachineSpecification;
-import dto.ProcessRecord;
 import dto.config.details.MachineSnapshot;
 import dto.config.details.RotorSnapshot;
+import dto.history.ProcessRecord;
 import enigma.machine.component.keyboard.KeyBoard;
 import enigma.machine.component.keyboard.KeyBoardImpl;
 import enigma.machine.component.machine.EnigmaMachine;
@@ -75,7 +75,7 @@ public class EngineImpl implements Engine {
 
     }
 
-
+    //this function build the current position of the rotors in the format of <Letter(DistanceFromNotch),Letter(DistanceFromNotch),...>
     private void BuildCurrentCode(StringBuilder currentSbString, Setting machineOrinialCode) {
 
         currentSbString.append('<');
@@ -110,6 +110,7 @@ public class EngineImpl implements Engine {
         sb.append('>');
     }
 
+    //this function build the current position of the rotors in the format of <Letter(DistanceFromNotch),Letter(DistanceFromNotch),...>
     private void BuildOrignialCode(Setting machineOrinialCode, StringBuilder sb) {
         sb.append('<');
         List<Setting.RotorPosition> activeRotors = machineOrinialCode.getActiveRotors();

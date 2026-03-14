@@ -1,6 +1,6 @@
 package patmal.course.enigma.service;
 
-import dto.ProcessRecord;
+import dto.history.ProcessRecord;
 import org.springframework.stereotype.Service;
 import patmal.course.enigma.PersistanceService;
 

@@ -1,7 +1,7 @@
 package patmal.course.enigma.service;
 
 
-import dto.ProcessRecord;
+import dto.history.ProcessRecord;
 import dto.process.ProcessInputResult;
 import engine.Engine;
 import org.springframework.stereotype.Service;

@@ -1,7 +1,7 @@
 package controller.history.converter;
 
 
-import dto.ProcessRecord;
+import dto.history.ProcessRecord;
 import org.springframework.stereotype.Component;
 import patmal.course.enigma.api.model.HistoryEntry;
 

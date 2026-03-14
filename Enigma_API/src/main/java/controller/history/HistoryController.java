@@ -1,8 +1,7 @@
-
 package controller.history;
 
 import controller.history.converter.HistoryConverter;
-import dto.ProcessRecord;
+import dto.history.ProcessRecord;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,14 +28,13 @@ public class HistoryController {
             @RequestParam(value = "machineName", required = false) String machineName) {
         Map<String, List<ProcessRecord>> history;
 
-        try{
+        try {
             history = historyService.getHistory(sessionID, machineName);
             return ResponseEntity.ok(historyConverter.convertToHistoryEntryMap(history));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(
+                    new GetMachineHistory400Response().error(e.getMessage()));
         }
-            catch (RuntimeException e) {
-                return ResponseEntity.badRequest().body(
-                        new GetMachineHistory400Response().error(e.getMessage()));
-            }
 
 
     }

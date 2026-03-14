@@ -1,4 +1,4 @@
-package patmal.course.enigma;
+package patmal.course.enigma.validator;
 
 import bte.component.jaxb.*;
 import exception.fileexception.RotorCountOutOfRangeException;

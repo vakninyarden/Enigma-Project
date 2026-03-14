@@ -1,8 +1,8 @@
 package engine;
 
 import dto.DtoMachineSpecification;
-import dto.ProcessRecord;
 import dto.config.details.MachineSnapshot;
+import dto.history.ProcessRecord;
 
 
 public interface Engine {

@@ -1,7 +1,7 @@
 package patmal.course.enigma;
 
 
-import dto.ProcessRecord;
+import dto.history.ProcessRecord;
 import enigma.machine.component.reflector.Reflector;
 import enigma.machine.component.rotor.Rotor;
 import jakarta.persistence.EntityManager;
