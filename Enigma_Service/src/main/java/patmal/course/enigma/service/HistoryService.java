@@ -4,10 +4,10 @@ import dto.ProcessRecord;
 import org.springframework.stereotype.Service;
 import patmal.course.enigma.PersistanceService;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
 
 @Service
 public class HistoryService {
@@ -16,6 +16,22 @@ public class HistoryService {
     public HistoryService(PersistanceService persistanceService) {
         this.persistanceService = persistanceService;
     }
+
+    public Map<String, List<ProcessRecord>> getHistory(String sessionId, String machineName) {
+
+
+        if ((sessionId == "" && machineName == "") || (sessionId != "" && machineName != "")) {
+            throw new RuntimeException("Must provide either sessionID or machineName, but not both");
+        }
+
+        if (sessionId != "") {
+            return getHistoryBySessionId(sessionId);
+
+        } else {
+            return getHistoryByMachineName(machineName);
+        }
+    }
+
 
     public Map<String, List<ProcessRecord>> getHistoryBySessionId(String sessionId) {
         List<ProcessRecord> records = persistanceService.getHistoryBySessionId(sessionId);

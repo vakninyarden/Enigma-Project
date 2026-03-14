@@ -9,36 +9,19 @@ import enigma.machine.component.rotor.RotorImpl;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
+import org.springframework.stereotype.Component;
+import repository.Repository;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.stereotype.Component;
-import repository.Repository;
-
 
 @Component
 public class LoadManager {
     private XmlFileValidator xmlValidator = new XmlFileValidator();
-
-
-    public BTEEnigma loadXmlToObject(String xmlNameFile) {
-        try {
-            InputStream inputStream = new FileInputStream(new File(xmlNameFile));
-            BTEEnigma machine = deserializeFrom(inputStream);
-            cleanMachine(machine);
-            return machine;
-        } catch (JAXBException | FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 
 
     public BTEEnigma loadXmlFromStream(InputStream inputStream) {

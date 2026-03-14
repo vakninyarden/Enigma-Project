@@ -106,17 +106,6 @@ public class PersistanceService {
     public void saveProcessingRecordToDb(ProcessRecord record, String sessionId) {
         MachineEntity machineEntity = getMachineByName(record.getMachineName());
 
-     /*   ProcessingEntity processingEntity =
-                ProcessingEntity.builder()
-                        .id(UUID.randomUUID())
-                        .sessionId(sessionId)
-                        .code(record.currentCode)
-                        .inputText(record.getSorceMessage())
-                        .outputText(record.getProcessedMessage())
-                        .timeNs(record.getTimeInNanos())
-                        .machine(machineEntity)
-                        .build();
-*/
 
         ProcessingEntity processingEntity = new ProcessingEntity();
         processingEntity.setId(UUID.randomUUID());

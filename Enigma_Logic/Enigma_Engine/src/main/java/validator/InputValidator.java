@@ -1,12 +1,8 @@
 package validator;
 
 import exception.inputexception.*;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
-
-
-// need to be component to be able to autowire to the engine imple instead of creating new instance of it in the engine impl
 
 
 public class InputValidator {
@@ -55,7 +51,8 @@ public class InputValidator {
         }
 
         if (parts.length != expectedCountOfRotors) {
-            if (parts.length > expectedCountOfRotors) throw new TooManyRotorsSelectedException("you selected" + parts.length + " rotors");
+            if (parts.length > expectedCountOfRotors)
+                throw new TooManyRotorsSelectedException("you selected" + parts.length + " rotors");
             else throw new TooFewRotorsSelectedException("you selected" + parts.length + " rotors");
         }
 

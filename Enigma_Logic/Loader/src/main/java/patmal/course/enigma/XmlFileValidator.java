@@ -1,32 +1,18 @@
 package patmal.course.enigma;
 
 import bte.component.jaxb.*;
-import exception.fileexception.*;
+import exception.fileexception.RotorCountOutOfRangeException;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
 import java.math.BigInteger;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 
 @Component
 public class XmlFileValidator implements FileValidator {
 
-    public boolean isFileExists(String filePath) {
-        File file = new File(filePath);
-        if (!file.exists() || !file.isFile()) {
-            throw new exception.fileexception.FileDoesNotExistException(filePath);
-        }
-        return true;
-    }
-
-    public boolean validateIsXmlFile(String filePath) {
-        if (!filePath.toLowerCase().endsWith(".xml")) {
-            throw new exception.fileexception.NotXmlFileException(filePath);
-        }
-        return true;
-
-    }
 
     @Override
     public boolean isAbcSizeEven(String abc) {

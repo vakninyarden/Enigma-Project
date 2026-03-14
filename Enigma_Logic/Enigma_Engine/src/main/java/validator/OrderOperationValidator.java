@@ -1,7 +1,6 @@
 package validator;
 
 import exception.inputexception.InputValidationException;
-import org.springframework.stereotype.Component;
 
 
 public class OrderOperationValidator {

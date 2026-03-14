@@ -1,12 +1,10 @@
 package engine;
 
-import dto.*;
+import dto.DtoMachineSpecification;
+import dto.ProcessRecord;
 import dto.config.details.MachineSnapshot;
 
-import java.io.IOException;
 
-
-// testing commit
 public interface Engine {
 
     DtoMachineSpecification showMachineDetails();
@@ -18,12 +16,6 @@ public interface Engine {
     String codeAuto();
 
     void resetCode();
-
-    DtoStatistic statistics();
-
-    void saveMachineStateToFile(String path) throws IOException;
-
-    void loadMachineStateFromFile(String path) throws IOException;
 
     String getCurrentRotorPositions();
 

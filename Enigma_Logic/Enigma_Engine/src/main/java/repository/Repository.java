@@ -1,11 +1,11 @@
 package repository;
 
 import enigma.machine.component.reflector.Reflector;
-import enigma.machine.component.reflector.ReflectorImpl;
 import enigma.machine.component.rotor.Rotor;
 import enigma.machine.component.rotor.RotorImpl;
-import java.util.*;
+
 import java.io.Serializable;
+import java.util.Map;
 
 
 public class Repository implements Serializable {
@@ -23,24 +23,7 @@ public class Repository implements Serializable {
         this.numberOfRotors = numberOfRotors;
         this.MachineName = machineName;
     }
-/*
-    public Repository(String abc, BTEEnigma bteEnigma,int numberOfRotors) {
-        this.abc = abc.toUpperCase();
-        this.rotors = buildRotorsRepository(bteEnigma.getBTERotors(), this.abc);
-        this.reflectors = buildReflectorsRepository(bteEnigma.getBTEReflectors());
-        this.numberOfRotors = numberOfRotors;
-    }
-*/
 
-    // Copy constructor for deep copy (currently shallow copy of maps)
- /*   public Repository(Repository other) {
-        this.abc = other.abc;
-        this.numberOfRotors = other.numberOfRotors;
-
-        // SHALLOW copy של המפות (בשלב ראשון)
-        this.rotors = new HashMap<>(other.rotors);
-        this.reflectors = new HashMap<>(other.reflectors);
-    }*/
 
     public String getAbc() {
         return abc;
@@ -50,7 +33,7 @@ public class Repository implements Serializable {
         return createRotor(index);
     }
 
-    public Rotor createRotor(int index){
+    public Rotor createRotor(int index) {
         Rotor newRotor = rotors.get(index);
         return new RotorImpl(newRotor.getRotorId(), newRotor.getNotchIndex(), newRotor.getRightMapping(), newRotor.getLeftMapping());
     }

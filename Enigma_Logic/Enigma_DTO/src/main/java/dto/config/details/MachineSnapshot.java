@@ -1,9 +1,8 @@
 package dto.config.details;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

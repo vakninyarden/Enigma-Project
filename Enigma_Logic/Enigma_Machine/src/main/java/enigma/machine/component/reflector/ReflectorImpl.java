@@ -1,11 +1,8 @@
 package enigma.machine.component.reflector;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
-import java.util.Map;
 import java.io.Serializable;
+import java.util.Map;
 
 public class ReflectorImpl implements Reflector, Serializable {
 

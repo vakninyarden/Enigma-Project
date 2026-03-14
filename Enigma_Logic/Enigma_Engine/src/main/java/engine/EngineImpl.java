@@ -1,12 +1,12 @@
 package engine;
 
-import dto.*;
+import dto.DtoMachineSpecification;
 import dto.ProcessRecord;
 import dto.config.details.MachineSnapshot;
 import dto.config.details.RotorSnapshot;
-import engine.statistic.StatisticsManager;
 import enigma.machine.component.keyboard.KeyBoard;
 import enigma.machine.component.keyboard.KeyBoardImpl;
+import enigma.machine.component.machine.EnigmaMachine;
 import enigma.machine.component.machine.EnigmaMachineImpl;
 import enigma.machine.component.plugboard.PlugBoard;
 import enigma.machine.component.plugboard.PlugBoardImpl;
@@ -17,12 +17,9 @@ import enigma.machine.component.setting.SettingImpl;
 import repository.Repository;
 import validator.InputValidator;
 import validator.OrderOperationValidator;
-import enigma.machine.component.machine.EnigmaMachine;
-import java.io.*;
+
 import java.util.*;
 import java.util.stream.Collectors;
-
-
 
 
 public class EngineImpl implements Engine {
@@ -30,9 +27,8 @@ public class EngineImpl implements Engine {
     boolean isCodeSet = false;
     private final OrderOperationValidator orderOperationValidator;
 
-    private  int messageCount = 0;
+    private int messageCount = 0;
     private EnigmaMachine machine;
-    private StatisticsManager statisticsManager;
     private Repository repository;
 
 
@@ -40,10 +36,8 @@ public class EngineImpl implements Engine {
         this.repository = repository;
         this.inputValidator = new InputValidator();
         this.orderOperationValidator = new OrderOperationValidator();
-        this.statisticsManager = new StatisticsManager();
 
     }
-
 
 
     @Override
@@ -65,7 +59,6 @@ public class EngineImpl implements Engine {
         BuildCurrentCodeString(code, currentSbString);
 
 
-
         DtoMachineSpecification dtoMachineSpecification = new DtoMachineSpecification(repository.getRotorCount(),
                 repository.getReflectorCount(),
                 messageCount,
@@ -83,12 +76,12 @@ public class EngineImpl implements Engine {
     }
 
 
-     private void BuildCurrentCode(StringBuilder currentSbString, Setting machineOrinialCode) {
+    private void BuildCurrentCode(StringBuilder currentSbString, Setting machineOrinialCode) {
 
         currentSbString.append('<');
         List<Setting.RotorPosition> activeRotors = machineOrinialCode.getActiveRotors();
-         int abcLength = repository.getAbc().length();
-         for (int i = 0; i < activeRotors.size(); i++) {
+        int abcLength = repository.getAbc().length();
+        for (int i = 0; i < activeRotors.size(); i++) {
             Rotor rotor = activeRotors.get(i).getRotor();
             int currentPosition = rotor.getCurrentPosition();
             currentSbString.append(rotor.getRightMapping().get(currentPosition));
@@ -156,7 +149,7 @@ public class EngineImpl implements Engine {
         orderOperationValidator.validateCodeSet(isCodeSet);
         StringBuilder currentCode = new StringBuilder();
         Setting code = machine.getSetting();
-        BuildCurrentCode(currentCode, code);
+        BuildCurrentCodeString(code, currentCode);
 
         message = message.toUpperCase();
         InputValidator.validateMessageInput(message, repository.getAbc());
@@ -169,12 +162,12 @@ public class EngineImpl implements Engine {
         }
         long endTime = System.nanoTime();
         long totalTime = endTime - startTime;
-       // updateStatistic(message, result, totalTime);
+        // updateStatistic(message, result, totalTime);
         String machineName = repository.getMachineName();
 
 
         return new ProcessRecord(message, new String(result), totalTime, currentCode.toString(), machineName);
-       // return new String(result);
+        // return new String(result);
     }
 
 
@@ -194,16 +187,9 @@ public class EngineImpl implements Engine {
         Map<Character, Character> plugboardMap = buildPlugboardMap(plugboardInput);
         setMachineSetting(rotorIds, initialRotorsPositions, reflectorIdStr, plugboardMap);
 
-        createCodeForStatistic();
-        isCodeSet=true;
+        isCodeSet = true;
     }
 
-    private void createCodeForStatistic() {
-
-        StringBuilder originalCode = new StringBuilder();
-        BuildOrinigalCodeString(machine.getSetting(), originalCode);
-        statisticsManager.setCurrentCode(originalCode.toString());
-    }
 
     private void setMachineSetting(List<Integer> rotorIds, String initialRotorsPositions, String reflectorId, Map<Character, Character> plugboardMap) {
         List<Setting.RotorPosition> activeRotors = new ArrayList<>();
@@ -244,8 +230,7 @@ public class EngineImpl implements Engine {
         StringBuilder originalCode = new StringBuilder();
         BuildOrinigalCodeString(machine.getSetting(), originalCode);
 
-        createCodeForStatistic();
-        isCodeSet=true;
+        isCodeSet = true;
         return originalCode.toString();
     }
 
@@ -272,11 +257,6 @@ public class EngineImpl implements Engine {
         machine.resetMachine();
     }
 
-    @Override
-    public DtoStatistic statistics() {
-        DtoStatistic dtoStatistic = new DtoStatistic(statisticsManager.getStatisticsData());
-        return dtoStatistic;
-    }
 
     private String intToRoman(int num) {
         String[] thousands = {"", "M", "MM", "MMM"};
@@ -290,28 +270,8 @@ public class EngineImpl implements Engine {
                 units[num % 10];
     }
 
-    @Override
-    public void saveMachineStateToFile(String path) throws IOException {
-        try (
-                ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(path))) {
-            out.writeObject(machine);
-            out.writeObject(statisticsManager);
-            out.writeObject(repository);
-        }
-    }
 
-    @Override
-    public void loadMachineStateFromFile(String path) throws IOException {
-        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(path))) {
-            this.machine = (EnigmaMachine) in.readObject();
-            this.statisticsManager = (StatisticsManager) in.readObject();
-            this.repository = (Repository) in.readObject();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public  Map<Character, Character> buildPlugboardMap(String input) {
+    public Map<Character, Character> buildPlugboardMap(String input) {
         Map<Character, Character> plugboard = new HashMap<>();
 
         if (input == null || input.isEmpty()) {
@@ -331,7 +291,7 @@ public class EngineImpl implements Engine {
     }
 
 
-   Map<Character, Character> BuildAutoPlugBoard() {
+    Map<Character, Character> BuildAutoPlugBoard() {
         Map<Character, Character> plugboardMap = new HashMap<>();
         Random rand = new Random();
         int numberOfPairs = rand.nextInt((repository.getAbc().length() / 2) + 1);
@@ -361,7 +321,7 @@ public class EngineImpl implements Engine {
         for (Map.Entry<Character, Character> entry : machineOrinialCode.getPlugboard().getPlugboardMap().entrySet()) {
             char key = entry.getKey();
             char value = entry.getValue();
-            if(!SeemCharsInPlugBoard.contains(key)){
+            if (!SeemCharsInPlugBoard.contains(key)) {
                 SeemCharsInPlugBoard.add(value);
                 stringBuilder.append(key);
                 stringBuilder.append("|");
@@ -374,7 +334,7 @@ public class EngineImpl implements Engine {
     }
 
 
-   public String getCurrentRotorPositions() {
+    public String getCurrentRotorPositions() {
         StringBuilder currentSbString = new StringBuilder();
         BuildCurrentCodeString(machine.getSetting(), currentSbString);
         return currentSbString.toString();
@@ -382,24 +342,19 @@ public class EngineImpl implements Engine {
 
     @Override
     public MachineSnapshot getMachineSnapshot() {
-        if(!isCodeSet){
+        if (!isCodeSet) {
             MachineSnapshot snapshot = MachineSnapshot.builder()
                     .totalRotors(repository.getRotorCount())
                     .totalReflectors(repository.getReflectorCount())
                     .totalProcessedMessages(messageCount)
                     .build();
-            return  snapshot;
+            return snapshot;
         }
 
-       /* if (!isCodeSet) {
-            MachineSnapshot snap = new MachineSnapshot(repository.getRotorCount(),
-                    repository.getReflectorCount(),
-                    0);
-            return snap;
-        }*/
-        Setting setting=machine.getSetting();
+
+        Setting setting = machine.getSetting();
         List<RotorSnapshot> rotorSnapshots = new ArrayList<>();
-        for(Setting.RotorPosition rotorPosition : setting.getActiveRotors()){
+        for (Setting.RotorPosition rotorPosition : setting.getActiveRotors()) {
             Rotor rotor = rotorPosition.getRotor();
 
             int originalPos = rotor.getOriginalPosition();

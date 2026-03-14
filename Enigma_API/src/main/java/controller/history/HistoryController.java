@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import patmal.course.enigma.api.model.GetMachineHistory400Response;
-import patmal.course.enigma.api.model.HistoryEntry;
 import patmal.course.enigma.service.HistoryService;
 
 import java.util.List;
@@ -30,22 +29,16 @@ public class HistoryController {
             @RequestParam(value = "machineName", required = false) String machineName) {
         Map<String, List<ProcessRecord>> history;
 
-        if ((sessionID == "" && machineName == "") || (sessionID != "" && machineName != "")) {
-            return ResponseEntity.badRequest().body(
-                    new GetMachineHistory400Response()
-                            .error("Must provide either sessionID or machineName, but not both")
-            );
+        try{
+            history = historyService.getHistory(sessionID, machineName);
+            return ResponseEntity.ok(historyConverter.convertToHistoryEntryMap(history));
         }
+            catch (RuntimeException e) {
+                return ResponseEntity.badRequest().body(
+                        new GetMachineHistory400Response().error(e.getMessage()));
+            }
 
-        if (sessionID != "") {
-            history = historyService.getHistoryBySessionId(sessionID);
 
-        } else {
-            history = historyService.getHistoryByMachineName(machineName);
-        }
-        return ResponseEntity.ok(historyConverter.convertToHistoryEntryMap(history));
     }
-
-
 }
 

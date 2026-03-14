@@ -4,11 +4,9 @@ import bte.component.jaxb.BTEEnigma;
 import bte.component.jaxb.BTEReflector;
 import bte.component.jaxb.BTERotor;
 
-
 import java.util.List;
 
 public interface FileValidator {
-    boolean isFileExists(String filePath);
 
     boolean isAbcSizeEven(String abc);
 

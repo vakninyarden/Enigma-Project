@@ -4,7 +4,8 @@ import java.util.Map;
 
 public interface PlugBoard {
 
-    public char plugboardSwap(char c);
-    public Map<Character, Character> getPlugboardMap();
+    char plugboardSwap(char c);
+
+    Map<Character, Character> getPlugboardMap();
 
 }
